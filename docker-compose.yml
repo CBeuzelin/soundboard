@@ -3,34 +3,20 @@ services:
   client:
     build:
       context: client
-      dockerfile: client/Dockerfile
+      dockerfile: Dockerfile
     container_name: client
     restart: unless-stopped
     ports:
       - "80:80"
-    networks:
-      - app-network
 
   api:
     build:
       context: api
-      dockerfile: api/Dockerfile
+      dockerfile: Dockerfile
     container_name: api
     restart: unless-stopped
     ports:
       - "8080:3000"
-    networks:
-      - app-network
-
-  nginx:
-    image: nginx:1.19.10-alpine
-    container_name: nginx
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    networks:
-      - app-network
 
 #  db:
 #    image: mysql:5.7.22
@@ -46,7 +32,3 @@ services:
 #      SERVICE_NAME: mysql
 #    networks:
 #      - app-network
-
-networks:
-  app-network:
-    driver: bridge
