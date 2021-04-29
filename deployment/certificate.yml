@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: sounboard-crt
+  namespace: soundboard
+spec:
+  secretName: sounboard-crt-secret
+  dnsNames:
+    - soundboard.cbeuzelin.fr
+  acme:
+    config:
+      - http01:
+          ingressClass: nginx
+        domains:
+          - soundboard.cbeuzelin.fr
+  issuerRef:
+    name: le-clusterissuer
+    kind: ClusterIssuer
