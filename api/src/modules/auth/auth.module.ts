@@ -1,13 +1,22 @@
-import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
+import { UserModule } from '../user/user.module';
 
-import { DiscordModule } from '../discord/discord.module';
 import { AuthController } from './auth.controller';
-import { DiscordStrategy } from './strategy/discord.strategy';
+import { EInjectToken } from './resources/enums/inject-token.enum';
+import { DiscordStrategy } from './resources/strategies/discord.strategy';
+import { AuthService } from './auth.service';
+import { SessionSerializer } from './resources/serializer';
 
 @Module({
-  imports: [HttpModule, DiscordModule],
+  imports: [UserModule],
   controllers: [AuthController],
-  providers: [DiscordStrategy],
+  providers: [
+    DiscordStrategy,
+    SessionSerializer,
+    {
+      provide: EInjectToken.AUTH_SERVICE,
+      useClass: AuthService,
+    },
+  ],
 })
 export class AuthModule {}

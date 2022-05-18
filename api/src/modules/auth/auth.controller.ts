@@ -1,54 +1,27 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
-import { firstValueFrom } from 'rxjs';
+import { Controller, Get, Res, UseGuards } from '@nestjs/common';
+import { Response } from 'express';
 
-import { AuthRouteEnum } from './route.enum';
-import { DiscordAuthGuard } from './strategy/discord-auth.guard';
-import { DiscordService } from '../discord/discord.service';
+import { EAuthRoute } from './resources/enums/route.enum';
+import { DiscordAuthGuard } from './resources/guards/discord-auth.guard';
 
-@Controller(AuthRouteEnum.ROOT)
+@Controller(EAuthRoute.ROOT)
 export class AuthController {
-  constructor(private readonly discordService: DiscordService) {}
-
+  @Get(EAuthRoute.LOGIN)
   @UseGuards(DiscordAuthGuard)
-  @Get(AuthRouteEnum.LOGIN)
   login(): void {
     return;
   }
 
+  @Get(EAuthRoute.LOGOUT)
   @UseGuards(DiscordAuthGuard)
-  @Get(AuthRouteEnum.CALLBACK)
-  async callback(@Req() req, @Res() res) {
-    const authInfo = req.authInfo;
+  logout(): void {
+    return;
+  }
 
-    if (!authInfo) {
-      res.redirect('/');
-      return;
-    }
-
-    req.user = undefined;
-
-    console.log(authInfo.accessToken);
-
-    const resUser = await firstValueFrom(
-      this.discordService.getUser(authInfo.accessToken),
-    ).catch((err) => {
-      console.log(err);
-    });
-
-    console.log(resUser.data);
-
-    if (!!resUser && resUser.data) {
-      req.logIn(resUser.data, (err) => {
-        console.log(err);
-      });
-    }
-
-    // const resGuilds = await firstValueFrom(
-    //   this.discordService.getUserGuilds(authInfo.accessToken),
-    // );
-    //
-    // console.log(resGuilds.data);
-
+  @Get(EAuthRoute.REDIRECT)
+  @UseGuards(DiscordAuthGuard)
+  async redirect(@Res() res: Response) {
+    // res.send(200);
     return res.redirect('http://localhost:4200/login-success');
   }
 }

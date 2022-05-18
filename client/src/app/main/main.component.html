@@ -1,0 +1,11 @@
+<div id="main">
+  <button (click)="getGuilds()">Get Guilds</button>
+
+  <div *ngIf="loading; else guilds_list">Loading...</div>
+
+  <ng-template #guilds_list>
+    <div *ngFor="let guild of guilds">
+      {{ guild.name }}
+    </div>
+  </ng-template>
+</div>
