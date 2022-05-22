@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
+import { SoundsComponent } from './sounds.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [SoundsComponent],
   imports: [CommonModule, TranslateModule],
 })
-export class TopBarModule {}
+export class SoundsModule {}

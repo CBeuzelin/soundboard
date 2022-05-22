@@ -20,7 +20,6 @@ export class MainComponent implements OnInit {
     this.loading = true;
     this.discordService.getGuilds().subscribe((guilds) => {
       this.guilds = guilds;
-      console.log(this.guilds);
       this.loading = false;
     });
   }

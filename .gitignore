@@ -13,6 +13,7 @@ client/.angular
 api/src/helpers/ad-data/adKeys.json
 api/config/test.json
 api/config/development.json
+api/cert/**
 
 # Testing
 /coverage

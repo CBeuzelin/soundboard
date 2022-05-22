@@ -1,7 +1,7 @@
-<div id="main">
-  <button (click)="getGuilds()">Get Guilds</button>
+<div id="main" class="main-content">
+  <button (click)="getGuilds()">{{ "home.getGuilds" | translate }}</button>
 
-  <div *ngIf="loading; else guilds_list">Loading...</div>
+  <div *ngIf="loading; else guilds_list">{{ "home.loading" | translate }}</div>
 
   <ng-template #guilds_list>
     <div *ngFor="let guild of guilds">

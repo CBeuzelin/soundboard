@@ -1,0 +1,15 @@
+{
+  "home": {
+    "_": "Accueil",
+    "getGuilds": "Récupérer les guildes",
+    "loading": "Chargement..."
+  },
+  "sounds": {
+    "_": "Sons",
+    "soundPage": "Ceci est la page des sons"
+  },
+  "topBar": {
+    "login": "Se connecter",
+    "switchLang": "Changer la langue"
+  }
+}

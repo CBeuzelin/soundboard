@@ -1,0 +1,15 @@
+{
+  "home": {
+    "_": "Home",
+    "getGuilds": "Get Guilds",
+    "loading": "Loading..."
+  },
+  "sounds": {
+    "_": "Sounds",
+    "soundPage": "This is the sounds page"
+  },
+  "topBar": {
+    "login": "Login",
+    "switchLang": "Switch Language"
+  }
+}

@@ -1,4 +1,21 @@
 <div id="top-bar">
-  <div></div>
-  <button (click)="login()">Login Discord</button>
+  <nav>
+    <ul>
+      <li *ngFor="let tab of tabs">
+        <a routerLink="{{ tab.routerLink }}" [routerLinkActive]="['active']">
+          {{ tab.translation }}
+          <div class="active-border"></div>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  <div class="button-container">
+    <button (click)="login()">{{ "topBar.login" | translate }}</button>
+
+    <img
+      src="assets/images/{{ this.getCurrentLang() }}_flag.png"
+      alt="{{ this.getCurrentLang() }} flag"
+      (click)="switchLang()"
+    />
+  </div>
 </div>
