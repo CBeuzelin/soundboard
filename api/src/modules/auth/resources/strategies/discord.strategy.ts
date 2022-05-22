@@ -1,22 +1,18 @@
 import { PassportStrategy } from '@nestjs/passport';
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Profile, Strategy } from 'passport-discord';
 import { IUser } from '../../../user/resources/interfaces/user.interface';
-import { EInjectToken } from '../enums/inject-token.enum';
+import { AuthService } from '../../auth.service';
 
 import { EAuthRoute } from '../enums/route.enum';
 import { EStrategy } from '../enums/strategy.enum';
-import { IAuthenticationProvider } from '../interfaces/authentication-provider.interface';
 
 @Injectable()
 export class DiscordStrategy extends PassportStrategy(
   Strategy,
   EStrategy.DISCORD,
 ) {
-  constructor(
-    @Inject(EInjectToken.AUTH_SERVICE)
-    private readonly authService: IAuthenticationProvider,
-  ) {
+  constructor(private readonly authService: AuthService) {
     super({
       authorizationURL: process.env.DISCORD_AUTH_URL,
       tokenURL: process.env.DISCORD_AUTH_TOKEN_URL,
@@ -35,6 +31,6 @@ export class DiscordStrategy extends PassportStrategy(
       avatar: profile.avatar,
     };
 
-    return this.authService.validateUser(user);
+    return this.authService.validateUser(user, accessToken);
   }
 }

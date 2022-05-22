@@ -4,18 +4,39 @@ import * as passport from 'passport';
 import 'dotenv/config';
 
 import { AppModule } from './modules/app/app.module';
+import Utils from './utils/utils';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  let httpsOptions = {};
 
-  //TODO: Chopper la même conf de cookies que pour le Portal
-  app.enableCors();
+  if (process.env.SECURE_TLS === 'Y') {
+    httpsOptions = Utils.getTlsCredentials();
+  }
+
+  const app = await NestFactory.create(AppModule, { httpsOptions });
+
+  let corsOptions = {};
+  let sameSite = undefined;
+
+  if (Utils.isFrontModeStart()) {
+    corsOptions = {
+      credentials: true,
+      origin: ['http://localhost:3000', 'http://localhost:4200'],
+    };
+
+    sameSite = 'none';
+  }
+
+  app.enableCors(corsOptions);
 
   app.setGlobalPrefix('api');
   app.use(
     session({
       cookie: {
-        maxAge: 1000 * 60 * 60 * 24,
+        maxAge: 1000 * 60 * 60 * 24, // 24h
+        secure: true,
+        httpOnly: true,
+        sameSite,
       },
       secret: 'lzkejfhz;jkfeb',
       resave: false,

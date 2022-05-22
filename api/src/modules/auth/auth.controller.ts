@@ -1,5 +1,6 @@
 import { Controller, Get, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
+import Utils from '../../utils/utils';
 
 import { EAuthRoute } from './resources/enums/route.enum';
 import { DiscordAuthGuard } from './resources/guards/discord-auth.guard';
@@ -21,7 +22,7 @@ export class AuthController {
   @Get(EAuthRoute.REDIRECT)
   @UseGuards(DiscordAuthGuard)
   async redirect(@Res() res: Response) {
-    // res.send(200);
-    return res.redirect('http://localhost:4200/login-success');
+    const redirect = Utils.isFrontModeStart() ? 'http://localhost:4200' : '';
+    return res.redirect(`${redirect}/login-success`);
   }
 }

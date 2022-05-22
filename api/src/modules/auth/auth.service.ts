@@ -1,17 +1,20 @@
 import { Injectable } from '@nestjs/common';
+import { UserSession } from '../user/resources/classes/user.class';
 import { IUser } from '../user/resources/interfaces/user.interface';
 import { User } from '../user/resources/schemas/user.schema';
 import { UserService } from '../user/user.service';
-import { IAuthenticationProvider } from './resources/interfaces/authentication-provider.interface';
 
 @Injectable()
-export class AuthService implements IAuthenticationProvider {
+export class AuthService {
   constructor(private readonly userService: UserService) {}
 
-  async validateUser(user: IUser): Promise<User> {
+  async validateUser(user: IUser, accessToken: string): Promise<UserSession> {
     const dbUser = await this.userService.findUser(user.id);
-    if (dbUser) return dbUser;
-    return this.createUser(user);
+    if (dbUser) return new UserSession(dbUser, accessToken);
+
+    const userCreated = await this.createUser(user);
+
+    return new UserSession(userCreated, accessToken);
   }
 
   createUser(user: IUser): Promise<User> {
