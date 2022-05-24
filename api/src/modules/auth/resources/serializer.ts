@@ -20,7 +20,7 @@ export class SessionSerializer extends PassportSerializer {
     user: UserSession,
     done: (err: Error, user: UserSession) => void,
   ) {
-    const userDb = await this.authService.findUser(user.id);
+    const userDb = await this.authService.findUser(user.discordId);
 
     const userSession = userDb
       ? new UserSession(userDb, user.accessToken)

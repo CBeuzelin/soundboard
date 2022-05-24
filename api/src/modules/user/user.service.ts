@@ -13,11 +13,15 @@ export class UserService {
     return newUser.save();
   }
 
-  async findUser(id: string): Promise<User | undefined> {
-    return this.userModel.findOne({ id });
+  async findUserByDiscordId(discordId: string): Promise<User | undefined> {
+    return this.userModel.findOne({ discordId });
   }
 
-  async findAll(): Promise<User[]> {
+  async findUserFromSession(user: Express.User): Promise<User | undefined> {
+    return this.findUserByDiscordId(user['id']);
+  }
+
+  async findUsers(): Promise<User[]> {
     return this.userModel.find().exec();
   }
 }

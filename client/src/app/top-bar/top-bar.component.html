@@ -10,7 +10,9 @@
     </ul>
   </nav>
   <div class="button-container">
-    <button (click)="login()">{{ "topBar.login" | translate }}</button>
+    <button type="button" (click)="login()">
+      {{ "topBar.login" | translate }}
+    </button>
 
     <img
       src="assets/images/{{ this.getCurrentLang() }}_flag.png"

@@ -9,6 +9,7 @@ import Utils from '../../utils/utils';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from '../auth/auth.module';
+import { SoundModule } from '../sound/sound.module';
 
 const CLIENT_BUILD_DIR = Utils.isNodeEnvDev()
   ? '../../../client/dist/client'
@@ -25,6 +26,8 @@ const MONGOOSE_CONNECTION_URI =
   imports: [
     AuthModule,
     DiscordModule,
+    SoundModule,
+
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', CLIENT_BUILD_DIR),
     }),

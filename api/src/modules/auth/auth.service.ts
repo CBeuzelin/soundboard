@@ -9,7 +9,7 @@ export class AuthService {
   constructor(private readonly userService: UserService) {}
 
   async validateUser(user: IUser, accessToken: string): Promise<UserSession> {
-    const dbUser = await this.userService.findUser(user.id);
+    const dbUser = await this.userService.findUserByDiscordId(user.discordId);
     if (dbUser) return new UserSession(dbUser, accessToken);
 
     const userCreated = await this.createUser(user);
@@ -22,6 +22,6 @@ export class AuthService {
   }
 
   findUser(id: string): Promise<User | undefined> {
-    return this.userService.findUser(id);
+    return this.userService.findUserByDiscordId(id);
   }
 }

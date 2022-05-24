@@ -6,6 +6,7 @@
   },
   "sounds": {
     "_": "Sons",
+    "createSound": "Créer un son",
     "soundPage": "Ceci est la page des sons"
   },
   "topBar": {

@@ -21,7 +21,7 @@ async function bootstrap() {
   if (Utils.isFrontModeStart()) {
     corsOptions = {
       credentials: true,
-      origin: ['http://localhost:3000', 'http://localhost:4200'],
+      origin: ['http://localhost:3000', process.env.FRONT_URL],
     };
 
     sameSite = 'none';

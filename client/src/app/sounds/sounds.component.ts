@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SoundsService } from './sounds.service';
 
 @Component({
   selector: 'app-sounds',
@@ -6,7 +7,25 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./sounds.component.scss'],
 })
 export class SoundsComponent implements OnInit {
-  constructor() {}
+  coucou = 'nope';
+  sounds: any[] | undefined = undefined;
 
-  ngOnInit(): void {}
+  constructor(private soundService: SoundsService) {}
+
+  ngOnInit(): void {
+    this.getSounds();
+  }
+
+  public getSounds() {
+    this.soundService.getSounds().subscribe((sounds) => {
+      this.sounds = sounds;
+    });
+  }
+
+  public createSound() {
+    this.soundService.createSound().subscribe(() => {
+      this.coucou = 'yep';
+      this.getSounds();
+    });
+  }
 }

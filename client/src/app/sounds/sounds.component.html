@@ -1,3 +1,21 @@
 <div id="sounds" class="main-content">
   <div>{{ "sounds.soundPage" | translate }}</div>
+
+  <br />
+
+  <div *ngIf="sounds === undefined; else sounds_list">Undefined</div>
+
+  <ng-template #sounds_list>
+    <div *ngFor="let sound of sounds">
+      {{ sound.title }}
+    </div>
+  </ng-template>
+
+  <br />
+
+  <button type="submit" (click)="createSound()">
+    {{ "sounds.createSound" | translate }}
+  </button>
+
+  {{ coucou }}
 </div>

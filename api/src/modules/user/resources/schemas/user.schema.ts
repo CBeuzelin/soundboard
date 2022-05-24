@@ -7,7 +7,7 @@ export type UserDocument = User & Document;
 @Schema()
 export class User implements IUser {
   @Prop({ required: true, unique: true })
-  id: string;
+  discordId: string;
 
   @Prop({ required: true })
   name: string;

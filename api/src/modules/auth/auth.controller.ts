@@ -22,7 +22,7 @@ export class AuthController {
   @Get(EAuthRoute.REDIRECT)
   @UseGuards(DiscordAuthGuard)
   async redirect(@Res() res: Response) {
-    const redirect = Utils.isFrontModeStart() ? 'http://localhost:4200' : '';
+    const redirect = Utils.isFrontModeStart() ? process.env.FRONT_URL : '';
     return res.redirect(`${redirect}/login-success`);
   }
 }

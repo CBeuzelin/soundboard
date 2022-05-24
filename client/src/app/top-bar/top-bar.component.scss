@@ -50,6 +50,10 @@
     display: flex;
     gap: 24px;
 
+    button {
+      min-width: 132px;
+    }
+
     img {
       height: 44px;
       width: 44px;

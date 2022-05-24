@@ -8,7 +8,11 @@ export default class Utils {
   }
 
   static isFrontModeStart(): boolean {
-    return Utils.isNodeEnvDev() && process.env.FRONT_MODE === 'start';
+    return (
+      Utils.isNodeEnvDev() &&
+      process.env.FRONT_MODE === 'start' &&
+      !!process.env.FRONT_URL
+    );
   }
 
   static getTlsCredentials(): HttpsOptions {

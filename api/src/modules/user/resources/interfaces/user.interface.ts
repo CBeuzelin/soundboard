@@ -1,5 +1,5 @@
 export interface IUser {
-  id: string;
+  discordId: string;
   name: string;
   discriminator: string;
   avatar: string;
