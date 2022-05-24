@@ -14,6 +14,13 @@ const CLIENT_BUILD_DIR = Utils.isNodeEnvDev()
   ? '../../../client/dist/client'
   : 'client';
 
+const MONGOOSE_CONNECTION_URI =
+  `mongodb://${process.env.MONGODB_USER}` +
+  `:${encodeURIComponent(process.env.MONGODB_PASSWORD)}` +
+  `@${process.env.MONGODB_HOST}` +
+  `:${process.env.MONGODB_PORT}` +
+  `/${process.env.MONGODB_NAME}`;
+
 @Module({
   imports: [
     AuthModule,
@@ -21,9 +28,7 @@ const CLIENT_BUILD_DIR = Utils.isNodeEnvDev()
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', CLIENT_BUILD_DIR),
     }),
-    MongooseModule.forRoot(
-      `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_NAME}`,
-    ),
+    MongooseModule.forRoot(MONGOOSE_CONNECTION_URI),
     PassportModule.register({ session: true }),
   ],
   controllers: [AppController],
