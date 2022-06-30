@@ -1,9 +1,9 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { Profile, Strategy } from 'passport-discord';
+
 import { IUser } from '../../../user/resources/interfaces/user.interface';
 import { AuthService } from '../../auth.service';
-
 import { EAuthRoute } from '../enums/route.enum';
 import { EStrategy } from '../enums/strategy.enum';
 

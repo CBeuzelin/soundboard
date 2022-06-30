@@ -7,25 +7,13 @@ import { SoundsService } from './sounds.service';
   styleUrls: ['./sounds.component.scss'],
 })
 export class SoundsComponent implements OnInit {
-  coucou = 'nope';
-  sounds: any[] | undefined = undefined;
-
-  constructor(private soundService: SoundsService) {}
-
-  ngOnInit(): void {
-    this.getSounds();
+  constructor(public soundService: SoundsService) {
+    this.soundService.getSounds();
   }
 
-  public getSounds() {
-    this.soundService.getSounds().subscribe((sounds) => {
-      this.sounds = sounds;
-    });
-  }
+  ngOnInit(): void {}
 
   public createSound() {
-    this.soundService.createSound().subscribe(() => {
-      this.coucou = 'yep';
-      this.getSounds();
-    });
+    this.soundService.createSound();
   }
 }

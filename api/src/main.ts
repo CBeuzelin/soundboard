@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as session from 'express-session';
 import * as passport from 'passport';
@@ -21,7 +22,7 @@ async function bootstrap() {
   if (Utils.isFrontModeStart()) {
     corsOptions = {
       credentials: true,
-      origin: ['http://localhost:3000', process.env.FRONT_URL],
+      origin: [`http://localhost:${process.env.PORT}`, process.env.FRONT_URL],
     };
 
     sameSite = 'none';
@@ -45,6 +46,8 @@ async function bootstrap() {
   );
   app.use(passport.initialize());
   app.use(passport.session());
+
+  app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(process.env.PORT);
 }

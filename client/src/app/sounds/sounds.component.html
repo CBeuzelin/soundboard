@@ -3,19 +3,17 @@
 
   <br />
 
-  <div *ngIf="sounds === undefined; else sounds_list">Undefined</div>
+  <div *ngIf="soundService.sounds === undefined">Undefined</div>
 
-  <ng-template #sounds_list>
-    <div *ngFor="let sound of sounds">
-      {{ sound.title }}
+  <div class="sound-list" *ngIf="soundService.sounds !== undefined">
+    <div *ngFor="let sound of soundService.sounds">
+      <app-sound-tile [sound]="sound"></app-sound-tile>
     </div>
-  </ng-template>
+  </div>
 
   <br />
 
   <button type="submit" (click)="createSound()">
     {{ "sounds.createSound" | translate }}
   </button>
-
-  {{ coucou }}
 </div>

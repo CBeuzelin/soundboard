@@ -20,4 +20,8 @@ export class SoundService {
     const newSound = new this.soundModel({ ...sound, author });
     return newSound.save();
   }
+
+  async deleteSound(id: string): Promise<void> {
+    return this.soundModel.findOneAndDelete({ _id: id });
+  }
 }

@@ -2,4 +2,15 @@
 
 #sounds {
   height: $content_height;
+
+  .sound-list {
+    //display: grid;
+    //grid-template-columns: repeat(
+    //  auto-fill,
+    //  minmax(calc((100% - 48px) / 3), 1fr)
+    //);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
 }

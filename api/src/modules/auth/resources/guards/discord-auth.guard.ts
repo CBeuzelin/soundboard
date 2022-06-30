@@ -1,5 +1,6 @@
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+
 import { EStrategy } from '../enums/strategy.enum';
 
 @Injectable()

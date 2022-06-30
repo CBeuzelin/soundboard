@@ -7,7 +7,7 @@ let apiBaseUrl = '/api';
 
 // @ts-ignore
 if (frontMode === 'start') {
-  apiBaseUrl = 'https://localhost:3000/api';
+  apiBaseUrl = 'https://localhost:3001/api';
 }
 
 export const environment = {

@@ -1,0 +1,9 @@
+<div class="sound-tile" *ngIf="sound">
+  <div class="sound-tile-header">
+    <div class="sound-title">
+      {{ sound.title }}
+    </div>
+
+    <div class="delete" (click)="deleteSound(sound._id)">X</div>
+  </div>
+</div>

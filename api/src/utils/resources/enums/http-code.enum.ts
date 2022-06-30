@@ -2,6 +2,8 @@ export enum EHttpCode {
   OK = 200,
   CREATED = 201,
 
+  MOVED_PERMANENTLY = 301,
+
   UNAUTHORIZED = 400,
   FORBIDDEN = 403,
 }

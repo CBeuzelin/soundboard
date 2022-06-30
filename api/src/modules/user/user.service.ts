@@ -18,7 +18,7 @@ export class UserService {
   }
 
   async findUserFromSession(user: Express.User): Promise<User | undefined> {
-    return this.findUserByDiscordId(user['id']);
+    return this.findUserByDiscordId(user['discordId']);
   }
 
   async findUsers(): Promise<User[]> {

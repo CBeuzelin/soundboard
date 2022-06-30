@@ -1,0 +1,27 @@
+@import "src/shared/variables";
+
+.sound-tile {
+  width: 240px;
+  border: 1px solid $text_color;
+  border-radius: 8px;
+  padding: 12px;
+  user-select: none;
+
+  .sound-tile-header {
+    display: flex;
+    justify-content: space-between;
+
+    .sound-title {
+      font-size: 16px;
+    }
+
+    .delete {
+      cursor: pointer;
+      transition: opacity 0.3s;
+
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+  }
+}
