@@ -4,6 +4,6 @@ export class SoundDTO {
   @IsString()
   title: string;
 
-  @IsString({ each: true })
-  tags: string[];
+  @IsString()
+  tags: string;
 }

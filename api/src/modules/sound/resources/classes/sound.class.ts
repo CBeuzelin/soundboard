@@ -7,7 +7,7 @@ export class SoundPost {
 
   constructor(payload: SoundDTO) {
     this.title = payload.title;
-    this.tags = payload.tags;
+    this.tags = payload.tags.split(' ');
     this.createdAt = new Date();
   }
 }

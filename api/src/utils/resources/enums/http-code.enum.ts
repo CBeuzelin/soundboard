@@ -6,4 +6,6 @@ export enum EHttpCode {
 
   UNAUTHORIZED = 400,
   FORBIDDEN = 403,
+
+  INTERNAL_SERVER_ERROR = 500,
 }
