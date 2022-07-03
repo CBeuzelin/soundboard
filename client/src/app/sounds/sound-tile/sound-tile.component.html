@@ -1,12 +1,5 @@
 <div class="sound-tile" *ngIf="sound">
-  <img
-    *ngIf="!isNewSound"
-    class="sound-image"
-    src="{{ imageUrl }}"
-    alt="image of sound"
-  />
-
-  <app-sound-form-tile *ngIf="isNewSound"></app-sound-form-tile>
+  <img class="sound-image" src="{{ imageUrl }}" alt="image of sound" />
 
   <div class="sound-tile-content">
     <div class="sound-title">

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { NewSound, Sound } from '../resources/classes/sound.class';
+import { ISound } from '../resources/interfaces/sound.interface';
 import { SoundsService } from '../sounds.service';
 
 @Component({
@@ -9,27 +9,24 @@ import { SoundsService } from '../sounds.service';
   styleUrls: ['./sound-tile.component.scss'],
 })
 export class SoundTileComponent implements OnInit {
-  @Input() sound: Sound | NewSound | undefined;
+  @Input() sound: ISound | undefined;
 
-  isNewSound: boolean = false;
-  isEditing: boolean = false;
+  isEditing: boolean;
   imageUrl: string;
 
   constructor(private soundService: SoundsService) {
     this.imageUrl = '';
+    this.isEditing = false;
   }
 
   ngOnInit(): void {
-    if (this.sound instanceof Sound) {
+    if (this.sound) {
       this.imageUrl = `${environment.apiBaseUrl}/image/${this.sound._id}`;
     }
-
-    this.isNewSound = this.sound instanceof NewSound;
-    this.isEditing = this.isNewSound;
   }
 
   public deleteSound() {
-    if (this.sound instanceof Sound) {
+    if (this.sound) {
       this.soundService
         .deleteSound(this.sound._id)
         .subscribe(() => this.soundService.getSounds());
@@ -37,18 +34,8 @@ export class SoundTileComponent implements OnInit {
   }
 
   public async playSound() {
-    if (this.sound instanceof Sound) {
-      const audio = document.createElement('audio');
-
-      audio.src = `${environment.apiBaseUrl}/audio/${this.sound._id}`;
-
-      audio.addEventListener('loadedmetadata', () => {
-        console.log(audio.duration);
-
-        audio.play().then(() => {
-          audio.removeEventListener('loadedmetadata', () => {});
-        });
-      });
+    if (this.sound) {
+      this.soundService.playSound(this.sound._id);
     }
   }
 

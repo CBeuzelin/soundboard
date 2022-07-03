@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
-import { NewSound, Sound } from './resources/classes/sound.class';
-import { INewSound, ISound } from './resources/interfaces/sound.interface';
+import { ISound } from './resources/interfaces/sound.interface';
 import { Observable, Subscription } from 'rxjs';
 
 @Injectable({
@@ -11,7 +10,7 @@ import { Observable, Subscription } from 'rxjs';
 })
 export class SoundsService {
   readonly BASE_URL = `${environment.apiUrl}/sounds`;
-  sounds: (ISound | INewSound)[] | undefined;
+  sounds: ISound[] | undefined;
   currentPlayingSound: string | null;
 
   constructor(private http: HttpClient) {
@@ -20,9 +19,7 @@ export class SoundsService {
 
   getSounds(): Subscription {
     return this.http.get<ISound[]>(this.BASE_URL).subscribe((sounds) => {
-      this.sounds = [new NewSound()].concat(
-        sounds.map((sound) => new Sound(sound))
-      );
+      this.sounds = sounds;
     });
   }
 
@@ -32,5 +29,23 @@ export class SoundsService {
 
   createSound(newSound: FormData): Observable<void> {
     return this.http.post<void>(this.BASE_URL, newSound);
+  }
+
+  public playSound(sound: string | Blob) {
+    const audio = document.createElement('audio');
+
+    if (sound instanceof Blob) {
+      audio.src = window.URL.createObjectURL(sound);
+    } else {
+      audio.src = `${environment.apiBaseUrl}/audio/${sound}`;
+    }
+
+    audio.addEventListener('loadedmetadata', () => {
+      console.log(audio.duration);
+
+      audio.play().then(() => {
+        audio.removeEventListener('loadedmetadata', () => {});
+      });
+    });
   }
 }

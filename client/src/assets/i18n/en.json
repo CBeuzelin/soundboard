@@ -7,7 +7,8 @@
   "sounds": {
     "_": "Sounds",
     "createSound": "Create sound",
-    "soundPage": "This is the sounds page"
+    "tagsPlaceholder": "Tags (Zelda, Link, ...)",
+    "titlePlaceholder": "Title (Excuse-me, princess)"
   },
   "topBar": {
     "login": "Login",

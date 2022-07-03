@@ -3,52 +3,73 @@
   enctype="multipart/form-data"
   [formGroup]="form"
   (submit)="onSubmit()"
-  (cancel)="onCancel()"
+  (reset)="onReset()"
 >
-  <div class="sound-tile-header">
-    <label for="{{ formAttributes.TITLE }}">Title: </label>
-    <input
-      id="{{ formAttributes.TITLE }}"
-      name="{{ formAttributes.TITLE }}"
-      type="text"
-      formControlName="{{ formAttributes.TITLE }}"
-    />
-  </div>
+  <img class="sound-image" [src]="imagePreview" alt="image of sound" />
 
-  <label for="{{ formAttributes.TAGS }}">Tags: </label>
-  <input
-    id="{{ formAttributes.TAGS }}"
-    name="{{ formAttributes.TAGS }}"
-    type="text"
-    formControlName="{{ formAttributes.TAGS }}"
-  />
+  <div class="sound-tile-content">
+    <div class="sound-tile-header">
+      <input
+        id="{{ formAttributes.TITLE }}"
+        name="{{ formAttributes.TITLE }}"
+        type="text"
+        placeholder="{{ 'sounds.titlePlaceholder' | translate }}"
+        formControlName="{{ formAttributes.TITLE }}"
+      />
 
-  <div class="form-group">
-    <div class="preview" *ngIf="imagePreview && imagePreview !== null">
-      <img [src]="imagePreview" [alt]="form.value.name" />
+      <input
+        id="{{ formAttributes.TAGS }}"
+        name="{{ formAttributes.TAGS }}"
+        type="text"
+        placeholder="{{ 'sounds.tagsPlaceholder' | translate }}"
+        formControlName="{{ formAttributes.TAGS }}"
+      />
+    </div>
+
+    <div class="sound-tile-footer">
+      <button type="reset" class="button-icon undo">
+        <mat-icon>undo</mat-icon>
+      </button>
+
+      <label for="{{ formAttributes.IMAGE }}" class="custom-file-upload">
+        <div class="button button-icon image">
+          <mat-icon>image</mat-icon>
+        </div>
+      </label>
+      <input
+        id="{{ formAttributes.IMAGE }}"
+        name="{{ formAttributes.IMAGE }}"
+        type="file"
+        accept="{{ imageExtensions }}"
+        formControlName="{{ formAttributes.IMAGE }}"
+        (change)="onFileChange($event, formAttributes.IMAGE_SOURCE)"
+      />
+
+      <label for="{{ formAttributes.AUDIO }}" class="custom-file-upload">
+        <div class="button button-icon album">
+          <mat-icon>album</mat-icon>
+        </div>
+      </label>
+      <input
+        id="{{ formAttributes.AUDIO }}"
+        name="{{ formAttributes.AUDIO }}"
+        type="file"
+        accept="{{ audioExtensions }}"
+        formControlName="{{ formAttributes.AUDIO }}"
+        (change)="onFileChange($event, formAttributes.AUDIO_SOURCE)"
+      />
+
+      <div class="button button-icon play" *ngIf="hasSound">
+        <mat-icon (click)="playSound()">play_circle</mat-icon>
+      </div>
+
+      <button
+        type="submit"
+        class="button-icon check"
+        [ngClass]="{ disabled: form.invalid }"
+      >
+        <mat-icon>check</mat-icon>
+      </button>
     </div>
   </div>
-
-  <label for="{{ formAttributes.IMAGE }}">Image: </label>
-  <input
-    id="{{ formAttributes.IMAGE }}"
-    name="{{ formAttributes.IMAGE }}"
-    type="file"
-    accept="{{ imageExtensions }}"
-    formControlName="{{ formAttributes.IMAGE }}"
-    (change)="onFileChange($event, formAttributes.IMAGE_SOURCE)"
-  />
-
-  <label for="{{ formAttributes.AUDIO }}">Audio: </label>
-  <input
-    id="{{ formAttributes.AUDIO }}"
-    name="{{ formAttributes.AUDIO }}"
-    type="file"
-    accept="{{ audioExtensions }}"
-    formControlName="{{ formAttributes.AUDIO }}"
-    (change)="onFileChange($event, formAttributes.AUDIO_SOURCE)"
-  />
-
-  <button type="reset">Cancel</button>
-  <button type="submit">Submit</button>
 </form>
