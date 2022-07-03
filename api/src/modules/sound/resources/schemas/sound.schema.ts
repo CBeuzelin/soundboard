@@ -19,6 +19,9 @@ export class Sound implements ISound {
   @Prop({ required: true })
   createdAt: Date;
 
+  @Prop({ default: false })
+  isArchived: boolean;
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
   author: User;
 }
