@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -12,7 +12,9 @@ enum EFormAttributes {
   TITLE = 'title',
   TAGS = 'tags',
   IMAGE = 'image',
+  IMAGE_SOURCE = 'imageSource',
   AUDIO = 'audio',
+  AUDIO_SOURCE = 'audioSource',
 }
 
 @Component({
@@ -20,18 +22,12 @@ enum EFormAttributes {
   templateUrl: './sound-form-tile.component.html',
   styleUrls: ['./sound-form-tile.component.scss'],
 })
-export class SoundFormTileComponent implements OnInit {
-  public form = new FormGroup({
-    [EFormAttributes.TITLE]: new FormControl('', [Validators.required]),
-    [EFormAttributes.TAGS]: new FormControl(''),
-    [EFormAttributes.IMAGE]: new FormControl(null, [Validators.required]),
-    [EFormAttributes.AUDIO]: new FormControl(null, [Validators.required]),
-  });
-
+export class SoundFormTileComponent {
   public formAttributes: typeof EFormAttributes = EFormAttributes;
   public audioExtensions = '.mp3,.m4a,.webm';
   public imageExtensions = '.jpeg,.jpg,.png,.gif';
 
+  public form: FormGroup;
   public imagePreview: string | null;
 
   constructor(
@@ -39,21 +35,26 @@ export class SoundFormTileComponent implements OnInit {
     private soundService: SoundsService
   ) {
     this.imagePreview = null;
-  }
-
-  ngOnInit() {
     this.form = this.formBuilder.group({
       [EFormAttributes.TITLE]: [
         '',
         [Validators.required, Validators.minLength(4)],
       ],
       [EFormAttributes.TAGS]: [''],
-      [EFormAttributes.IMAGE]: [null],
-      [EFormAttributes.AUDIO]: [null],
+
+      [EFormAttributes.IMAGE]: new FormControl(null, [Validators.required]),
+      [EFormAttributes.IMAGE_SOURCE]: new FormControl(null, [
+        Validators.required,
+      ]),
+
+      [EFormAttributes.AUDIO]: new FormControl(null, [Validators.required]),
+      [EFormAttributes.AUDIO_SOURCE]: new FormControl(null, [
+        Validators.required,
+      ]),
     });
   }
 
-  public uploadFile(event: Event, formAttribute: EFormAttributes) {
+  public onFileChange(event: Event, formAttribute: EFormAttributes) {
     const files = (event.target as HTMLInputElement).files;
 
     if (files) {
@@ -61,9 +62,8 @@ export class SoundFormTileComponent implements OnInit {
 
       if (!!file || (!file && !this.form.value[formAttribute])) {
         this.form.patchValue({ [formAttribute]: file });
-        this.form.get(formAttribute)?.updateValueAndValidity();
 
-        if (formAttribute === EFormAttributes.IMAGE) {
+        if (formAttribute === EFormAttributes.IMAGE_SOURCE) {
           const reader = new FileReader();
           reader.onload = () => {
             this.imagePreview = reader.result as string;
@@ -85,8 +85,15 @@ export class SoundFormTileComponent implements OnInit {
     const newSoundFormData = new FormData();
     newSoundFormData.append(EFormAttributes.TITLE, form[EFormAttributes.TITLE]);
     newSoundFormData.append(EFormAttributes.TAGS, form[EFormAttributes.TAGS]);
-    newSoundFormData.append(EFormAttributes.IMAGE, form[EFormAttributes.IMAGE]);
-    newSoundFormData.append(EFormAttributes.AUDIO, form[EFormAttributes.AUDIO]);
+
+    newSoundFormData.append(
+      EFormAttributes.IMAGE,
+      this.form.get(EFormAttributes.IMAGE_SOURCE)?.value
+    );
+    newSoundFormData.append(
+      EFormAttributes.AUDIO,
+      this.form.get(EFormAttributes.AUDIO_SOURCE)?.value
+    );
 
     this.soundService.createSound(newSoundFormData).subscribe(() => {
       this.onCancel();

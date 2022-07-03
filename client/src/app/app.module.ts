@@ -10,6 +10,7 @@ import { MainModule } from './main/main.module';
 import { SoundsModule } from './sounds/sounds.module';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { TopBarModule } from './top-bar/top-bar.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -32,6 +33,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient],
       },
     }),
+    BrowserAnimationsModule,
   ],
   bootstrap: [AppComponent],
 })

@@ -37,6 +37,14 @@ export class FileUtils {
   //endregion
 
   //region FILE STORAGE METHODS
+  public static getFile(
+    fileType: EFileType,
+    fileName: string,
+  ): Promise<Buffer> {
+    const path = `${process.env.UPLOADS_DIRECTORY}/${fileType}/${fileName}`;
+    return fs.readFile(path);
+  }
+
   public static storeFiles(files: ISoundFiles, fileName: string) {
     const types = [EFileType.AUDIO, EFileType.IMAGE];
 

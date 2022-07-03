@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { EFileType } from './resources/enums/sound.enum';
 
 import { Sound, SoundDocument } from './resources/schemas/sound.schema';
 import { SoundPost } from './resources/classes/sound.class';
@@ -14,8 +15,12 @@ export class SoundService {
     @InjectModel(Sound.name) private soundModel: Model<SoundDocument>,
   ) {}
 
-  public findSounds(): Promise<Sound[]> {
+  public getSounds(): Promise<Sound[]> {
     return this.soundModel.find({ isArchived: false }).exec();
+  }
+
+  public getSoundImage(id: string): Promise<Buffer> {
+    return FileUtils.getFile(EFileType.IMAGE, id);
   }
 
   createSound(

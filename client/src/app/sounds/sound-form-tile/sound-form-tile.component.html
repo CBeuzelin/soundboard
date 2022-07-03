@@ -35,7 +35,8 @@
     name="{{ formAttributes.IMAGE }}"
     type="file"
     accept="{{ imageExtensions }}"
-    (change)="uploadFile($event, formAttributes.IMAGE)"
+    formControlName="{{ formAttributes.IMAGE }}"
+    (change)="onFileChange($event, formAttributes.IMAGE_SOURCE)"
   />
 
   <label for="{{ formAttributes.AUDIO }}">Audio: </label>
@@ -44,7 +45,8 @@
     name="{{ formAttributes.AUDIO }}"
     type="file"
     accept="{{ audioExtensions }}"
-    (change)="uploadFile($event, formAttributes.AUDIO)"
+    formControlName="{{ formAttributes.AUDIO }}"
+    (change)="onFileChange($event, formAttributes.AUDIO_SOURCE)"
   />
 
   <button type="reset">Cancel</button>

@@ -1,8 +1,10 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import 'dotenv/config';
+import { join } from 'path';
 
 import { AppModule } from './modules/app/app.module';
 import Utils from './utils/utils';
@@ -14,7 +16,9 @@ async function bootstrap() {
     httpsOptions = Utils.getTlsCredentials();
   }
 
-  const app = await NestFactory.create(AppModule, { httpsOptions });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    httpsOptions,
+  });
 
   let corsOptions = {};
   let sameSite = undefined;
@@ -48,6 +52,13 @@ async function bootstrap() {
   app.use(passport.session());
 
   app.useGlobalPipes(new ValidationPipe());
+
+  app.useStaticAssets(process.env.UPLOADS_DIRECTORY);
+
+  const CLIENT_BUILD_DIR = Utils.isNodeEnvDev()
+    ? '../client/dist/client'
+    : 'client';
+  app.useStaticAssets(join(__dirname, '..', CLIENT_BUILD_DIR));
 
   await app.listen(process.env.PORT);
 }

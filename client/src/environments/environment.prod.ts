@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
-  apiBaseUrl: '/api',
+  apiBaseUrl: '',
+  apiUrl: '/api',
   frontMode: 'build',
 };

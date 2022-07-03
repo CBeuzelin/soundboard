@@ -49,6 +49,6 @@ export class TopBarComponent implements OnInit {
   }
 
   public login(): void {
-    window.location.replace(`${environment.apiBaseUrl}/auth/login`);
+    window.location.replace(`${environment.apiUrl}/auth/login`);
   }
 }

@@ -2,30 +2,35 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
-import { ISound } from './resources/interfaces/sound.interface';
+import { NewSound, Sound } from './resources/classes/sound.class';
+import { INewSound, ISound } from './resources/interfaces/sound.interface';
 import { Observable, Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SoundsService {
-  sounds: ISound[] | undefined;
+  readonly BASE_URL = `${environment.apiUrl}/sounds`;
+  sounds: (ISound | INewSound)[] | undefined;
+  currentPlayingSound: string | null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.currentPlayingSound = null;
+  }
 
   getSounds(): Subscription {
-    return this.http
-      .get<ISound[]>(`${environment.apiBaseUrl}/sounds`)
-      .subscribe((sounds) => {
-        this.sounds = sounds;
-      });
+    return this.http.get<ISound[]>(this.BASE_URL).subscribe((sounds) => {
+      this.sounds = sounds.map((sound) => new Sound(sound));
+
+      this.sounds.push(new NewSound());
+    });
   }
 
   deleteSound(id: string): Observable<void> {
-    return this.http.delete<any>(`${environment.apiBaseUrl}/sounds/${id}`);
+    return this.http.delete<any>(`${this.BASE_URL}/${id}`);
   }
 
   createSound(newSound: FormData): Observable<void> {
-    return this.http.post<void>(`${environment.apiBaseUrl}/sounds`, newSound);
+    return this.http.post<void>(this.BASE_URL, newSound);
   }
 }

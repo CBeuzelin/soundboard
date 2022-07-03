@@ -23,7 +23,7 @@ export class AuthController {
 
   @Get(EAuthRoute.REDIRECT)
   @UseGuards(DiscordAuthGuard)
-  @Redirect(`${redirect}/login-success`, EHttpCode.MOVED_PERMANENTLY)
+  @Redirect(`${redirect}/`, EHttpCode.MOVED_PERMANENTLY)
   redirect(): void {
     return;
   }

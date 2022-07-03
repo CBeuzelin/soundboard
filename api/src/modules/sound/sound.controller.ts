@@ -33,7 +33,12 @@ export class SoundController {
 
   @Get()
   async getSounds() {
-    return this.soundService.findSounds();
+    return this.soundService.getSounds();
+  }
+
+  @Get(`:id/${ESoundRoute.IMAGE}`)
+  async getSoundImage(@Req() req: Request) {
+    return this.soundService.getSoundImage(req.params.id);
   }
 
   @Post()

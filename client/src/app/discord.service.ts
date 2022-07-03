@@ -10,6 +10,6 @@ export class DiscordService {
   constructor(private http: HttpClient) {}
 
   getGuilds(): Observable<any[]> {
-    return this.http.get<any[]>(`${environment.apiBaseUrl}/discord/guilds`);
+    return this.http.get<any[]>(`${environment.apiUrl}/discord/guilds`);
   }
 }
