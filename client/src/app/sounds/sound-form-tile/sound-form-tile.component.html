@@ -1,0 +1,52 @@
+<form
+  class="sound-form-tile"
+  enctype="multipart/form-data"
+  [formGroup]="form"
+  (submit)="onSubmit()"
+  (cancel)="onCancel()"
+>
+  <div class="sound-tile-header">
+    <label for="{{ formAttributes.TITLE }}">Title: </label>
+    <input
+      id="{{ formAttributes.TITLE }}"
+      name="{{ formAttributes.TITLE }}"
+      type="text"
+      formControlName="{{ formAttributes.TITLE }}"
+    />
+  </div>
+
+  <label for="{{ formAttributes.TAGS }}">Tags: </label>
+  <input
+    id="{{ formAttributes.TAGS }}"
+    name="{{ formAttributes.TAGS }}"
+    type="text"
+    formControlName="{{ formAttributes.TAGS }}"
+  />
+
+  <div class="form-group">
+    <div class="preview" *ngIf="imagePreview && imagePreview !== null">
+      <img [src]="imagePreview" [alt]="form.value.name" />
+    </div>
+  </div>
+
+  <label for="{{ formAttributes.IMAGE }}">Image: </label>
+  <input
+    id="{{ formAttributes.IMAGE }}"
+    name="{{ formAttributes.IMAGE }}"
+    type="file"
+    accept="{{ imageExtensions }}"
+    (change)="uploadFile($event, formAttributes.IMAGE)"
+  />
+
+  <label for="{{ formAttributes.AUDIO }}">Audio: </label>
+  <input
+    id="{{ formAttributes.AUDIO }}"
+    name="{{ formAttributes.AUDIO }}"
+    type="file"
+    accept="{{ audioExtensions }}"
+    (change)="uploadFile($event, formAttributes.AUDIO)"
+  />
+
+  <button type="reset">Cancel</button>
+  <button type="submit">Submit</button>
+</form>

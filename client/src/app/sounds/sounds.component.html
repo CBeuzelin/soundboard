@@ -9,11 +9,7 @@
     <div *ngFor="let sound of soundService.sounds">
       <app-sound-tile [sound]="sound"></app-sound-tile>
     </div>
+
+    <app-sound-form-tile></app-sound-form-tile>
   </div>
-
-  <br />
-
-  <button type="submit" (click)="createSound()">
-    {{ "sounds.createSound" | translate }}
-  </button>
 </div>

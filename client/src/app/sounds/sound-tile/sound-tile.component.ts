@@ -15,6 +15,8 @@ export class SoundTileComponent implements OnInit {
   ngOnInit(): void {}
 
   public deleteSound(id: string) {
-    this.soundService.deleteSound(id);
+    this.soundService
+      .deleteSound(id)
+      .subscribe(() => this.soundService.getSounds());
   }
 }

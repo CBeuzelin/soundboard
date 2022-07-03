@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
 import { ISound } from './resources/interfaces/sound.interface';
+import { Observable, Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -12,28 +13,19 @@ export class SoundsService {
 
   constructor(private http: HttpClient) {}
 
-  getSounds(): void {
-    this.http
+  getSounds(): Subscription {
+    return this.http
       .get<ISound[]>(`${environment.apiBaseUrl}/sounds`)
       .subscribe((sounds) => {
         this.sounds = sounds;
       });
   }
 
-  deleteSound(id: string): void {
-    this.http
-      .delete<any>(`${environment.apiBaseUrl}/sounds/${id}`)
-      .subscribe(() => this.getSounds());
+  deleteSound(id: string): Observable<void> {
+    return this.http.delete<any>(`${environment.apiBaseUrl}/sounds/${id}`);
   }
 
-  createSound(): void {
-    const payload = {
-      title: 'title1',
-      tags: ['tag1', 'tag2'],
-    };
-
-    this.http
-      .post<void>(`${environment.apiBaseUrl}/sounds`, payload)
-      .subscribe(() => this.getSounds());
+  createSound(newSound: FormData): Observable<void> {
+    return this.http.post<void>(`${environment.apiBaseUrl}/sounds`, newSound);
   }
 }

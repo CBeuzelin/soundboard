@@ -12,8 +12,4 @@ export class SoundsComponent implements OnInit {
   }
 
   ngOnInit(): void {}
-
-  public createSound() {
-    this.soundService.createSound();
-  }
 }
