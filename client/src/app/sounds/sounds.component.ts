@@ -8,6 +8,11 @@ import { SoundsService } from './sounds.service';
   styleUrls: ['./sounds.component.scss'],
 })
 export class SoundsComponent implements OnInit {
+  masonryOptions = {
+    gutter: 12,
+    fitWidth: true,
+  };
+
   constructor(public soundService: SoundsService) {
     this.soundService.getSounds();
   }

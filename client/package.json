@@ -22,6 +22,8 @@
     "@angular/router": "~13.3.0",
     "@ngx-translate/core": "^14.0.0",
     "@ngx-translate/http-loader": "^7.0.0",
+    "masonry-layout": "^4.2.2",
+    "ngx-masonry": "^13.0.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

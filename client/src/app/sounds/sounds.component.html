@@ -5,13 +5,18 @@
 
   <div *ngIf="soundService.sounds === undefined">Undefined</div>
 
-  <div class="columns">
-    <div class="sound-list" *ngIf="soundService.sounds !== undefined">
-      <div *ngFor="let sound of soundService.sounds">
-        <app-sound-tile [sound]="sound"></app-sound-tile>
-      </div>
-
-      <app-sound-form-tile></app-sound-form-tile>
+  <ngx-masonry
+    [options]="masonryOptions"
+    [ordered]="true"
+    class="sound-list"
+    *ngIf="soundService.sounds !== undefined"
+  >
+    <div
+      ngxMasonryItem
+      class="masonry-item"
+      *ngFor="let sound of soundService.sounds"
+    >
+      <app-sound-tile [sound]="sound"></app-sound-tile>
     </div>
-  </div>
+  </ngx-masonry>
 </div>

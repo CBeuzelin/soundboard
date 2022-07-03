@@ -4,9 +4,10 @@
   height: $content_height;
 
   .sound-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-    justify-content: space-between;
-    gap: 24px;
+    margin: 0 auto;
+
+    .masonry-item {
+      width: 300px;
+    }
   }
 }

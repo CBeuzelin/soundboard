@@ -20,9 +20,9 @@ export class SoundsService {
 
   getSounds(): Subscription {
     return this.http.get<ISound[]>(this.BASE_URL).subscribe((sounds) => {
-      this.sounds = sounds.map((sound) => new Sound(sound));
-
-      this.sounds.push(new NewSound());
+      this.sounds = [new NewSound()].concat(
+        sounds.map((sound) => new Sound(sound))
+      );
     });
   }
 
