@@ -1,6 +1,4 @@
-import { Request, Response } from 'express';
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -13,43 +11,18 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { extname } from 'path';
-import { lookup } from 'mime-types';
+import { Request, Response } from 'express';
 
-import { ESoundRoute } from './resources/enums/route.enum';
-import { SoundService } from './sound.service';
-import { AuthenticatedGuard } from '../auth/resources/guards/authenticated.guard';
-import { SoundPost } from './resources/classes/sound.class';
-import { UserService } from '../user/user.service';
 import { EHttpCode } from '../../utils/resources/enums/http-code.enum';
+import { AuthenticatedGuard } from '../auth/resources/guards/authenticated.guard';
+import { UserService } from '../user/user.service';
+import { SoundPost } from './resources/classes/sound.class';
 import { SoundDTO } from './resources/dto/sound.dto';
-import { ISoundFiles } from './resources/interfaces/sound.interface';
+import { ESoundRoute } from './resources/enums/route.enum';
 import { EFileType } from './resources/enums/sound.enum';
-
-const fileFilter = async (req, file, callback) => {
-  const throwError = (error: string) => {
-    return callback(
-      new BadRequestException(
-        `${error} - file: ${file.originalname} - field name: ${file.fieldname}`,
-      ),
-      false,
-    );
-  };
-
-  let filetypes;
-  if (file.fieldname === EFileType.AUDIO) filetypes = /mp3|m4a|webm/;
-  if (file.fieldname === EFileType.IMAGE) filetypes = /jpeg|jpg|png|gif/;
-
-  try {
-    const extension = extname(file.originalname).toLowerCase();
-    if (!filetypes.test(extension)) throwError('Invalid extension');
-    if (!lookup(extension) === file.mimetype) throwError('Invalid mime type');
-
-    return callback(null, true);
-  } catch {
-    throwError('Invalid file');
-  }
-};
+import { ISoundFiles } from './resources/interfaces/sound.interface';
+import { SoundService } from './sound.service';
+import { FileUtils } from '../../utils/file-utils';
 
 @Controller(ESoundRoute.ROOT)
 export class SoundController {
@@ -64,14 +37,14 @@ export class SoundController {
   }
 
   @Post()
-  // @UseGuards(AuthenticatedGuard)
+  @UseGuards(AuthenticatedGuard)
   @UseInterceptors(
     FileFieldsInterceptor(
       [
         { name: EFileType.AUDIO, maxCount: 1 },
         { name: EFileType.IMAGE, maxCount: 1 },
       ],
-      { fileFilter },
+      { fileFilter: FileUtils.fileFilter },
     ),
   )
   async createSound(
@@ -82,15 +55,11 @@ export class SoundController {
     files: ISoundFiles,
   ) {
     const sound = new SoundPost({ ...soundDto });
-    // const user = await this.userService.findUserFromSession(req.user);
-    const user = {
-      _id: '62bd7410d6d9181fe04f0ed9',
-      discordId: '155236684378669057',
-      name: 'Freddy',
-      discriminator: '0334',
-      avatar: 'a7b0e37e9a87f0d56fa8c1bd7b89f2bb',
-      __v: 0,
-    };
+    if (!files[EFileType.AUDIO] || !files[EFileType.IMAGE]) {
+      return res.sendStatus(EHttpCode.BAD_REQUEST);
+    }
+
+    const user = await this.userService.findUserFromSession(req.user);
 
     if (user) {
       return this.soundService
@@ -103,7 +72,7 @@ export class SoundController {
   }
 
   @Delete(':id')
-  // @UseGuards(AuthenticatedGuard)
+  @UseGuards(AuthenticatedGuard)
   async archiveSound(@Req() req: Request) {
     return await this.soundService.archiveSound(req.params.id);
   }

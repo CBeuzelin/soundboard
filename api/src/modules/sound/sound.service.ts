@@ -6,7 +6,7 @@ import { Sound, SoundDocument } from './resources/schemas/sound.schema';
 import { SoundPost } from './resources/classes/sound.class';
 import { User } from '../user/resources/schemas/user.schema';
 import { ISoundFiles } from './resources/interfaces/sound.interface';
-import { StorageUtils } from '../../utils/storageUtils';
+import { FileUtils } from '../../utils/file-utils';
 
 @Injectable()
 export class SoundService {
@@ -15,7 +15,7 @@ export class SoundService {
   ) {}
 
   public findSounds(): Promise<Sound[]> {
-    return this.soundModel.find().exec();
+    return this.soundModel.find({ isArchived: false }).exec();
   }
 
   createSound(
@@ -25,15 +25,13 @@ export class SoundService {
   ): Promise<Sound> {
     const newSound = new this.soundModel({ ...sound, author });
     return newSound.save().then((sound) => {
-      return StorageUtils.storeFiles(files, sound._id).then(() => sound);
+      return FileUtils.storeFiles(files, sound._id).then(() => sound);
     });
   }
 
   archiveSound(id: string): Promise<void[]> {
-    this.soundModel.findOneAndUpdate({ _id: id }, { isArchived: true });
-
-    return StorageUtils.archiveFiles(id).then(() =>
-      this.soundModel.findOneAndDelete({ _id: id }),
+    return FileUtils.archiveFiles(id).then(() =>
+      this.soundModel.findOneAndUpdate({ _id: id }, { isArchived: true }),
     );
   }
 }
