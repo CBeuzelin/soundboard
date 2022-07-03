@@ -64,7 +64,7 @@ export class SoundController {
   }
 
   @Post()
-  // @UseGuards(AuthenticatedGuard)
+  @UseGuards(AuthenticatedGuard)
   @UseInterceptors(
     FileFieldsInterceptor(
       [
@@ -82,15 +82,7 @@ export class SoundController {
     files: ISoundFiles,
   ) {
     const sound = new SoundPost({ ...soundDto });
-    // const user = await this.userService.findUserFromSession(req.user);
-    const user = {
-      _id: '62bd7410d6d9181fe04f0ed9',
-      discordId: '155236684378669057',
-      name: 'Freddy',
-      discriminator: '0334',
-      avatar: 'a7b0e37e9a87f0d56fa8c1bd7b89f2bb',
-      __v: 0,
-    };
+    const user = await this.userService.findUserFromSession(req.user);
 
     if (user) {
       return this.soundService
@@ -103,8 +95,8 @@ export class SoundController {
   }
 
   @Delete(':id')
-  // @UseGuards(AuthenticatedGuard)
-  async archiveSound(@Req() req: Request) {
-    return await this.soundService.archiveSound(req.params.id);
+  @UseGuards(AuthenticatedGuard)
+  async deleteSound(@Req() req: Request) {
+    return await this.soundService.deleteSound(req.params.id);
   }
 }
