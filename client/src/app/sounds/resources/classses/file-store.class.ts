@@ -17,9 +17,20 @@ export default class FileStore {
     return FileStore.instance;
   }
 
-  // public getSoundFromStore(id: string): SoundFiles | undefined {
-  //   return this.soundFiles.find((el) => el.id === id);
-  // }
+  private addSoundToStore(
+    id: string,
+    imageBlob?: Blob,
+    audioBlob?: Blob
+  ): void {
+    const soundFilesIndex = this.soundFiles.findIndex((el) => el.id === id);
+
+    if (soundFilesIndex === -1) {
+      this.soundFiles.push({ id, imageBlob, audioBlob });
+    } else {
+      if (imageBlob) this.soundFiles[soundFilesIndex].imageBlob = imageBlob;
+      if (audioBlob) this.soundFiles[soundFilesIndex].audioBlob = audioBlob;
+    }
+  }
 
   public getImageFromStore(id: string): Blob | undefined {
     const sound = this.soundFiles.find((el) => el.id === id);
@@ -39,24 +50,12 @@ export default class FileStore {
     this.addSoundToStore(id, undefined, audio);
   }
 
-  public addSoundToStore(id: string, imageBlob?: Blob, audioBlob?: Blob): void {
-    const soundFilesIndex = this.soundFiles.findIndex((el) => el.id === id);
-
-    if (soundFilesIndex === -1) {
-      this.soundFiles.push({ id, imageBlob, audioBlob });
-    } else {
-      if (imageBlob) this.soundFiles[soundFilesIndex].imageBlob = imageBlob;
-      if (audioBlob) this.soundFiles[soundFilesIndex].audioBlob = audioBlob;
-    }
-  }
-
   public removeSoundFromStore(id: string): void {
     const soundFilesIndex = this.soundFiles.findIndex((el) => el.id === id);
 
     if (soundFilesIndex > -1) {
       this.soundFiles.splice(soundFilesIndex, 1);
     }
-    console.log('removed sound from store', id, this.soundFiles);
   }
 
   public removeImageFromStore(id: string): void {
@@ -65,7 +64,6 @@ export default class FileStore {
     if (soundFilesIndex > -1) {
       this.soundFiles[soundFilesIndex].imageBlob = undefined;
     }
-    console.log('removed image from store', id, this.soundFiles);
   }
 
   public removeAudioFromStore(id: string): void {
@@ -74,6 +72,5 @@ export default class FileStore {
     if (soundFilesIndex > -1) {
       delete this.soundFiles[soundFilesIndex].audioBlob;
     }
-    console.log('removed audio from store', id, this.soundFiles);
   }
 }

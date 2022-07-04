@@ -29,8 +29,10 @@ export class SoundsService {
         sounds.map((sound) => {
           const newSound = new Sound(sound);
 
-          newSound.setImage();
-          newSound.setAudio();
+          newSound
+            .setImage()
+            .then(() => newSound.setAudio())
+            .then(() => this.refreshSounds());
 
           return newSound;
         })
@@ -65,14 +67,12 @@ export class SoundsService {
     return this.http.delete<any>(`${this.BASE_URL}/${id}`);
   }
 
-  public playSound(sound: Blob) {
+  public playSound(sound: Blob): void {
     const audio = document.createElement('audio');
 
     audio.src = window.URL.createObjectURL(sound);
 
     audio.addEventListener('loadedmetadata', () => {
-      console.log(audio.duration);
-
       audio.play().then(() => {
         audio.removeEventListener('loadedmetadata', () => {});
       });

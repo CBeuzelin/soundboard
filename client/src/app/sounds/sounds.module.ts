@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxMasonryModule } from 'ngx-masonry';
 
@@ -15,8 +16,9 @@ import { SoundFormTileComponent } from './sound-form-tile/sound-form-tile.compon
     CommonModule,
     TranslateModule,
     ReactiveFormsModule,
-    MatIconModule,
     NgxMasonryModule,
+    MatIconModule,
+    MatProgressBarModule,
   ],
 })
 export class SoundsModule {}
