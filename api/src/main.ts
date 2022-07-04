@@ -7,9 +7,12 @@ import 'dotenv/config';
 import { join } from 'path';
 
 import { AppModule } from './modules/app/app.module';
+import Bot from './modules/discord/bot';
 import Utils from './utils/utils';
 
 async function bootstrap() {
+  await Bot.getInstance().init();
+
   let httpsOptions = {};
 
   if (process.env.SECURE_TLS === 'Y') {

@@ -22,6 +22,9 @@
     "exec": "node --inspect-brk -r ts-node/register -r tsconfig-paths/register ./src/main.ts"
   },
   "dependencies": {
+    "@discordjs/opus": "^0.5.3",
+    "@discordjs/rest": "^0.5.0",
+    "@discordjs/voice": "^0.10.0",
     "@nestjs/axios": "^0.0.7",
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
@@ -34,6 +37,7 @@
     "@types/passport-discord": "^0.1.5",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
+    "discord.js": "^13.8.1",
     "express-session": "^1.17.3",
     "mime-types": "^2.1.35",
     "mongoose": "^6.3.3",
@@ -44,7 +48,8 @@
     "passport-oauth2": "^1.6.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^7.2.0"
+    "rxjs": "^7.2.0",
+    "sodium": "^3.0.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",

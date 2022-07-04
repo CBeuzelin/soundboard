@@ -1,6 +1,9 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
+// import Bot from './bot';
+
+// const bot = Bot.getInstance();
 
 @Injectable()
 export class DiscordService {
