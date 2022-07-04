@@ -1,8 +1,8 @@
 export enum EFormAttributes {
   TITLE = 'title',
   TAGS = 'tags',
+  IMAGE_URL = 'imageUrl',
   IMAGE = 'image',
-  IMAGE_SOURCE = 'imageSource',
+  AUDIO_URL = 'audioUrl',
   AUDIO = 'audio',
-  AUDIO_SOURCE = 'audioSource',
 }

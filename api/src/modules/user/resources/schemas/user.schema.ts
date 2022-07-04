@@ -1,11 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Schema as MongoSchema } from 'mongoose';
+
 import { IUser } from '../interfaces/user.interface';
 
 export type UserDocument = User & Document;
 
 @Schema()
 export class User implements IUser {
+  _id: MongoSchema.Types.ObjectId;
+
   @Prop({ required: true, unique: true })
   discordId: string;
 

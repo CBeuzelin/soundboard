@@ -5,7 +5,7 @@ import { lookup } from 'mime-types';
 import { extname } from 'path';
 
 import { ISoundFiles } from '../modules/sound/resources/interfaces/sound.interface';
-import { EFileType } from '../modules/sound/resources/enums/sound.enum';
+import { ESoundFileType } from '../modules/sound/resources/enums/sound.enum';
 
 export class FileUtils {
   //region PRIVATE STORAGE METHODS
@@ -25,20 +25,36 @@ export class FileUtils {
     );
   }
 
-  private static archiveFile(fileType: EFileType, fileName: string) {
-    const oldPath = `${process.env.UPLOADS_DIRECTORY}/${fileType}/${fileName}`;
-    const newDir = `${process.env.UPLOADS_DIRECTORY}/archives/${fileType}`;
+  private static moveFile(oldPath: string, newDir: string, fileName: string) {
     const newPath = `${newDir}/${fileName}`;
-
     return FileUtils.createDirectory(newDir).then(() =>
       fs.rename(oldPath, newPath),
     );
+  }
+
+  private static updateFile(
+    file: Express.Multer.File,
+    dir: string,
+    fileName: string,
+  ) {
+    const path = `${dir}/${fileName}`;
+    return fs
+      .access(path)
+      .then(() => FileUtils.storeFile(file, dir, fileName))
+      .catch(() => FileUtils.storeFile(file, dir, fileName));
+  }
+
+  private static archiveFile(fileType: ESoundFileType, fileName: string) {
+    const oldPath = `${process.env.UPLOADS_DIRECTORY}/${fileType}/${fileName}`;
+    const newDir = `${process.env.UPLOADS_DIRECTORY}/archives/${fileType}`;
+
+    return FileUtils.moveFile(oldPath, newDir, fileName);
   }
   //endregion
 
   //region FILE STORAGE METHODS
   public static getFile(
-    fileType: EFileType,
+    fileType: ESoundFileType,
     fileName: string,
   ): Promise<Buffer> {
     const path = `${process.env.UPLOADS_DIRECTORY}/${fileType}/${fileName}`;
@@ -46,7 +62,7 @@ export class FileUtils {
   }
 
   public static storeFiles(files: ISoundFiles, fileName: string) {
-    const types = [EFileType.AUDIO, EFileType.IMAGE];
+    const types = [ESoundFileType.AUDIO, ESoundFileType.IMAGE];
 
     const promises = types.map((type) => {
       const dir = `${process.env.UPLOADS_DIRECTORY}/${type}`;
@@ -56,8 +72,28 @@ export class FileUtils {
     return Promise.all(promises);
   }
 
+  public static updateFiles(files: ISoundFiles, fileName: string) {
+    const promises: Promise<void>[] = [];
+
+    if (files[ESoundFileType.AUDIO]) {
+      const dir = `${process.env.UPLOADS_DIRECTORY}/${ESoundFileType.AUDIO}`;
+      promises.push(
+        FileUtils.updateFile(files[ESoundFileType.AUDIO][0], dir, fileName),
+      );
+    }
+
+    if (files[ESoundFileType.IMAGE]) {
+      const dir = `${process.env.UPLOADS_DIRECTORY}/${ESoundFileType.IMAGE}`;
+      promises.push(
+        FileUtils.updateFile(files[ESoundFileType.IMAGE][0], dir, fileName),
+      );
+    }
+
+    return Promise.all(promises);
+  }
+
   public static archiveFiles(soundId: string): Promise<void[]> {
-    const types = [EFileType.AUDIO, EFileType.IMAGE];
+    const types = [ESoundFileType.AUDIO, ESoundFileType.IMAGE];
 
     const promises = types.map((type) => FileUtils.archiveFile(type, soundId));
 
@@ -77,8 +113,8 @@ export class FileUtils {
     };
 
     let filetypes;
-    if (file.fieldname === EFileType.AUDIO) filetypes = /mp3|m4a|webm/;
-    if (file.fieldname === EFileType.IMAGE) filetypes = /jpeg|jpg|png|gif/;
+    if (file.fieldname === ESoundFileType.AUDIO) filetypes = /mp3|m4a|webm/;
+    if (file.fieldname === ESoundFileType.IMAGE) filetypes = /jpeg|jpg|png|gif/;
 
     try {
       const extension = extname(file.originalname).toLowerCase();

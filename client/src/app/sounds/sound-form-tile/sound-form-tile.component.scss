@@ -1,39 +1,8 @@
 @import "src/shared/variables";
-$border-radius: 8px;
 
-.sound-form-tile {
-  border: 1px solid $light_grey;
-  border-radius: $border-radius;
-  user-select: none;
-  overflow: hidden;
-  position: relative;
-  height: max-content;
-
-  .sound-image {
-    border-radius: $border-radius;
-    position: relative;
-    width: 100%;
-    min-height: 160px;
-    z-index: 0;
-  }
-
+.sound-tile {
   .sound-tile-content {
-    position: absolute;
-    top: 0;
-    z-index: 1;
-    height: calc(100% - 6px);
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-
-    .sound-tile-header,
-    .sound-tile-footer {
-      padding: 12px 24px;
-    }
-
-    .sound-tile-header {
-      flex: 1;
-      overflow: hidden;
+    .sound-tile-body {
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -42,9 +11,12 @@ $border-radius: 8px;
 
       input[type="text"] {
         width: 90%;
-        height: 30px;
+        height: 32px;
+        padding: 8px;
+        background-color: #dfdfe0;
         border: solid 1px $text_color;
         border-radius: 4px;
+        color: $grey;
         transition: border 0.3s;
 
         &:focus-visible {
@@ -55,60 +27,6 @@ $border-radius: 8px;
     }
 
     .sound-tile-footer {
-      display: flex;
-      justify-content: space-between;
-      background-color: rgba(0, 0, 0, 0.3);
-      border-bottom-left-radius: $border-radius;
-      border-bottom-right-radius: $border-radius;
-
-      button,
-      .button {
-        padding: 0;
-        color: $text_color;
-        background-color: unset;
-        border: unset;
-        cursor: pointer;
-        text-align: center;
-        transition: color 0.3s;
-
-        &:hover {
-          opacity: 1;
-        }
-
-        &.button-icon {
-          $icon-size: 30px;
-          height: $icon-size;
-          width: $icon-size;
-          display: block;
-
-          mat-icon {
-            font-size: $icon-size;
-          }
-
-          &.button-icon:hover {
-            color: $blue;
-          }
-
-          &.undo:hover {
-            color: $red;
-          }
-
-          &.check:hover {
-            color: $green;
-          }
-        }
-
-        &.disabled {
-          &.check {
-            cursor: not-allowed;
-
-            &:hover {
-              color: $text_color;
-            }
-          }
-        }
-      }
-
       input[type="file"] {
         display: none;
       }

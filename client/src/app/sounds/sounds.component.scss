@@ -1,4 +1,5 @@
 @import "src/shared/variables";
+$border-radius: 8px;
 
 #sounds {
   height: $content_height;
@@ -8,6 +9,113 @@
 
     .masonry-item {
       width: 300px;
+
+      ::ng-deep .sound-tile {
+        border: 1px solid $light_grey;
+        border-radius: $border-radius;
+        user-select: none;
+        overflow: hidden;
+        position: relative;
+        height: max-content;
+
+        .sound-image {
+          border-radius: $border-radius;
+          position: relative;
+          width: 100%;
+          min-height: 160px;
+          z-index: 0;
+        }
+
+        .sound-tile-content {
+          position: absolute;
+          top: 0;
+          z-index: 1;
+          height: calc(100% - 6px);
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+
+          .sound-tile-body,
+          .sound-tile-footer {
+            padding: 12px 24px;
+          }
+
+          .sound-tile-body {
+            flex: 1;
+            overflow: hidden;
+            text-align: center;
+            font-size: 40px;
+            line-height: 40px;
+            text-transform: uppercase;
+            text-shadow: 2px 3px 3px black;
+          }
+
+          .sound-tile-footer {
+            display: flex;
+            justify-content: space-between;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-bottom-left-radius: $border-radius;
+            border-bottom-right-radius: $border-radius;
+
+            .button-icon {
+              $icon-size: 30px;
+              height: $icon-size;
+              width: $icon-size;
+              cursor: pointer;
+              transition: color 0.3s;
+            }
+
+            button,
+            .button {
+              padding: 0;
+              color: $text_color;
+              background-color: unset;
+              border: unset;
+              cursor: pointer;
+              text-align: center;
+              transition: color 0.3s;
+
+              &:hover {
+                opacity: 1;
+              }
+
+              &.button-icon {
+                $icon-size: 30px;
+                height: $icon-size;
+                width: $icon-size;
+                display: block;
+
+                mat-icon {
+                  font-size: $icon-size;
+                }
+
+                &.button-icon:hover {
+                  color: $blue;
+                }
+
+                &.undo:hover,
+                &.delete:hover {
+                  color: $red;
+                }
+
+                &.check:hover {
+                  color: $green;
+                }
+              }
+
+              &.disabled {
+                &.check {
+                  cursor: not-allowed;
+
+                  &:hover {
+                    color: $text_color;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

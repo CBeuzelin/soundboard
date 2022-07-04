@@ -1,5 +1,5 @@
 <form
-  class="sound-form-tile"
+  class="sound-tile"
   enctype="multipart/form-data"
   [formGroup]="form"
   (submit)="onSubmit()"
@@ -8,9 +8,9 @@
   <img class="sound-image" [src]="imagePreview" alt="image of sound" />
 
   <div class="sound-tile-content">
-    <div class="sound-tile-header">
+    <div class="sound-tile-body">
       <input
-        id="{{ formAttributes.TITLE }}"
+        id="{{ getInputId(formAttributes.TITLE) }}"
         name="{{ formAttributes.TITLE }}"
         type="text"
         placeholder="{{ 'sounds.titlePlaceholder' | translate }}"
@@ -18,7 +18,7 @@
       />
 
       <input
-        id="{{ formAttributes.TAGS }}"
+        id="{{ getInputId(formAttributes.TAGS) }}"
         name="{{ formAttributes.TAGS }}"
         type="text"
         placeholder="{{ 'sounds.tagsPlaceholder' | translate }}"
@@ -32,7 +32,7 @@
       </button>
 
       <label
-        for="{{ formAttributes.IMAGE }}{{ this.sound?._id ?? 0 }}"
+        for="{{ getInputId(formAttributes.IMAGE_URL) }}"
         class="custom-file-upload"
       >
         <span class="button button-icon image">
@@ -40,16 +40,16 @@
         </span>
       </label>
       <input
-        id="{{ formAttributes.IMAGE }}{{ this.sound?._id ?? 0 }}"
-        name="{{ formAttributes.IMAGE }}"
+        id="{{ getInputId(formAttributes.IMAGE_URL) }}"
+        name="{{ formAttributes.IMAGE_URL }}"
         type="file"
         accept="{{ imageExtensions }}"
-        formControlName="{{ formAttributes.IMAGE }}"
-        (input)="onFileChange($event, formAttributes.IMAGE_SOURCE)"
+        formControlName="{{ formAttributes.IMAGE_URL }}"
+        (input)="onFileChange($event, formAttributes.IMAGE)"
       />
 
       <label
-        for="{{ formAttributes.AUDIO }}{{ this.sound?._id ?? 0 }}"
+        for="{{ getInputId(formAttributes.AUDIO_URL) }}"
         class="custom-file-upload"
       >
         <span class="button button-icon album">
@@ -57,12 +57,12 @@
         </span>
       </label>
       <input
-        id="{{ formAttributes.AUDIO }}{{ this.sound?._id ?? 0 }}"
-        name="{{ formAttributes.AUDIO }}"
+        id="{{ getInputId(formAttributes.AUDIO_URL) }}"
+        name="{{ formAttributes.AUDIO_URL }}"
         type="file"
         accept="{{ audioExtensions }}"
-        formControlName="{{ formAttributes.AUDIO }}"
-        (input)="onFileChange($event, formAttributes.AUDIO_SOURCE)"
+        formControlName="{{ formAttributes.AUDIO_URL }}"
+        (input)="onFileChange($event, formAttributes.AUDIO)"
       />
 
       <div class="button button-icon play" *ngIf="hasAudio">

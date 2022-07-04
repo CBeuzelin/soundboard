@@ -19,6 +19,9 @@ export class Sound implements ISound {
   @Prop({ required: true })
   createdAt: Date;
 
+  @Prop({ required: true })
+  updatedAt: Date;
+
   @Prop({ default: false })
   isArchived: boolean;
 
