@@ -13,6 +13,7 @@ $border-radius: 8px;
     border-radius: $border-radius;
     position: relative;
     width: 100%;
+    min-height: 160px;
     z-index: 0;
   }
 
@@ -78,6 +79,7 @@ $border-radius: 8px;
           $icon-size: 30px;
           height: $icon-size;
           width: $icon-size;
+          display: block;
 
           mat-icon {
             font-size: $icon-size;

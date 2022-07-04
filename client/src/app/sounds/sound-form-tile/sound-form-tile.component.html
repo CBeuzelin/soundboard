@@ -28,39 +28,47 @@
 
     <div class="sound-tile-footer">
       <button type="reset" class="button-icon undo">
-        <mat-icon>undo</mat-icon>
+        <mat-icon class="material-icons">undo</mat-icon>
       </button>
 
-      <label for="{{ formAttributes.IMAGE }}" class="custom-file-upload">
-        <div class="button button-icon image">
-          <mat-icon>image</mat-icon>
-        </div>
+      <label
+        for="{{ formAttributes.IMAGE }}{{ this.sound?._id ?? 0 }}"
+        class="custom-file-upload"
+      >
+        <span class="button button-icon image">
+          <mat-icon class="material-icons">image</mat-icon>
+        </span>
       </label>
       <input
-        id="{{ formAttributes.IMAGE }}"
+        id="{{ formAttributes.IMAGE }}{{ this.sound?._id ?? 0 }}"
         name="{{ formAttributes.IMAGE }}"
         type="file"
         accept="{{ imageExtensions }}"
         formControlName="{{ formAttributes.IMAGE }}"
-        (change)="onFileChange($event, formAttributes.IMAGE_SOURCE)"
+        (input)="onFileChange($event, formAttributes.IMAGE_SOURCE)"
       />
 
-      <label for="{{ formAttributes.AUDIO }}" class="custom-file-upload">
-        <div class="button button-icon album">
-          <mat-icon>album</mat-icon>
-        </div>
+      <label
+        for="{{ formAttributes.AUDIO }}{{ this.sound?._id ?? 0 }}"
+        class="custom-file-upload"
+      >
+        <span class="button button-icon album">
+          <mat-icon class="material-icons">album</mat-icon>
+        </span>
       </label>
       <input
-        id="{{ formAttributes.AUDIO }}"
+        id="{{ formAttributes.AUDIO }}{{ this.sound?._id ?? 0 }}"
         name="{{ formAttributes.AUDIO }}"
         type="file"
         accept="{{ audioExtensions }}"
         formControlName="{{ formAttributes.AUDIO }}"
-        (change)="onFileChange($event, formAttributes.AUDIO_SOURCE)"
+        (input)="onFileChange($event, formAttributes.AUDIO_SOURCE)"
       />
 
-      <div class="button button-icon play" *ngIf="hasSound">
-        <mat-icon (click)="playSound()">play_circle</mat-icon>
+      <div class="button button-icon play" *ngIf="hasAudio">
+        <mat-icon class="material-icons" (click)="playSound()"
+          >play_circle</mat-icon
+        >
       </div>
 
       <button
@@ -68,7 +76,7 @@
         class="button-icon check"
         [ngClass]="{ disabled: form.invalid }"
       >
-        <mat-icon>check</mat-icon>
+        <mat-icon class="material-icons">check</mat-icon>
       </button>
     </div>
   </div>

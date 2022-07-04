@@ -1,19 +1,18 @@
 <div id="sounds" class="main-content">
   <div *ngIf="soundService.sounds === undefined">Undefined</div>
 
-  <ngx-masonry
-    [options]="masonryOptions"
-    [ordered]="true"
-    class="sound-list"
-    *ngIf="soundService.sounds !== undefined"
-  >
+  <ngx-masonry class="sound-list" [options]="masonryOptions" [ordered]="true">
+    <app-sound-form-tile
+      ngxMasonryItem
+      class="masonry-item"
+    ></app-sound-form-tile>
+
     <div
       ngxMasonryItem
       class="masonry-item"
-      *ngFor="let sound of soundService.sounds; index as i"
+      *ngFor="let sound of soundService.sounds"
     >
-      <app-sound-form-tile *ngIf="i === 0"></app-sound-form-tile>
-      <app-sound-tile [sound]="sound" *ngIf="i > 0"></app-sound-tile>
+      <app-sound-tile [sound]="sound"></app-sound-tile>
     </div>
   </ngx-masonry>
 </div>

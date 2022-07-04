@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
 import { ISound } from './resources/interfaces/sound.interface';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -11,16 +11,28 @@ import { Observable, Subscription } from 'rxjs';
 export class SoundsService {
   readonly BASE_URL = `${environment.apiUrl}/sounds`;
   sounds: ISound[] | undefined;
+  soundsChange: Subject<ISound[]> = new Subject<ISound[]>();
+
   currentPlayingSound: string | null;
 
   constructor(private http: HttpClient) {
+    this.soundsChange.subscribe((sounds) => {
+      this.sounds = sounds;
+    });
+
     this.currentPlayingSound = null;
   }
 
   getSounds(): Subscription {
-    return this.http.get<ISound[]>(this.BASE_URL).subscribe((sounds) => {
-      this.sounds = sounds;
-    });
+    return this.http
+      .get<ISound[]>(this.BASE_URL)
+      .subscribe((sounds) => this.refreshSounds(sounds));
+  }
+
+  refreshSounds(sounds = this.sounds) {
+    if (sounds) {
+      this.soundsChange.next(sounds);
+    }
   }
 
   deleteSound(id: string): Observable<void> {
@@ -31,14 +43,10 @@ export class SoundsService {
     return this.http.post<void>(this.BASE_URL, newSound);
   }
 
-  public playSound(sound: string | Blob) {
+  public playSound(sound: Blob) {
     const audio = document.createElement('audio');
 
-    if (sound instanceof Blob) {
-      audio.src = window.URL.createObjectURL(sound);
-    } else {
-      audio.src = `${environment.apiBaseUrl}/audio/${sound}`;
-    }
+    audio.src = window.URL.createObjectURL(sound);
 
     audio.addEventListener('loadedmetadata', () => {
       console.log(audio.duration);

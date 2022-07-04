@@ -1,13 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
 import { SoundsService } from './sounds.service';
+import { NgxMasonryComponent } from 'ngx-masonry';
 
 @Component({
   selector: 'app-sounds',
   templateUrl: './sounds.component.html',
   styleUrls: ['./sounds.component.scss'],
 })
-export class SoundsComponent implements OnInit {
+export class SoundsComponent {
+  @ViewChild(NgxMasonryComponent)
+  public masonry: NgxMasonryComponent | undefined;
+
   masonryOptions = {
     gutter: 12,
     fitWidth: true,
@@ -17,5 +21,9 @@ export class SoundsComponent implements OnInit {
     this.soundService.getSounds();
   }
 
-  ngOnInit(): void {}
+  ngAfterViewInit() {
+    this.soundService.soundsChange.subscribe(() => {
+      this.masonry?.layout();
+    });
+  }
 }

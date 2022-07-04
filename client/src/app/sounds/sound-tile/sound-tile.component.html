@@ -1,4 +1,4 @@
-<div class="sound-tile" *ngIf="sound">
+<div class="sound-tile" *ngIf="sound && !isEditing">
   <img class="sound-image" src="{{ imageUrl }}" alt="image of sound" />
 
   <div class="sound-tile-content">
@@ -11,7 +11,7 @@
         <mat-icon (click)="deleteSound()">delete</mat-icon>
       </div>
 
-      <div class="button-icon play">
+      <div class="button-icon play" *ngIf="!!audioUrl">
         <mat-icon (click)="playSound()">play_circle</mat-icon>
       </div>
 
@@ -19,15 +19,15 @@
         <mat-icon (click)="editSound()">edit</mat-icon>
       </div>
     </div>
-
-    <div class="sound-tile-footer" *ngIf="isEditing">
-      <div class="button-icon undo">
-        <mat-icon (click)="undoEdition()">undo</mat-icon>
-      </div>
-
-      <div class="button-icon check">
-        <mat-icon (click)="saveSound()">check</mat-icon>
-      </div>
-    </div>
   </div>
 </div>
+
+<app-sound-form-tile
+  [sound]="sound"
+  [image]="imageUrl"
+  [imageSource]="image"
+  [audio]="audioUrl"
+  [audioSource]="audio"
+  (undoEdition)="undoEdition()"
+  *ngIf="sound && isEditing"
+></app-sound-form-tile>
