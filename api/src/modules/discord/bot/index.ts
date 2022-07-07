@@ -1,4 +1,3 @@
-import { Client, GuildChannel, Intents } from 'discord.js';
 import {
   AudioPlayer,
   AudioPlayerStatus,
@@ -8,9 +7,19 @@ import {
   PlayerSubscription,
   VoiceConnection,
 } from '@discordjs/voice';
+import { Client, GuildChannel, Intents } from 'discord.js';
+import { getAudioDurationInSeconds } from 'get-audio-duration';
 import { Subject } from 'rxjs';
+import { EDiscordErrorEnum } from '../resources/enums/error.enum';
 
 import Commands from './commands';
+
+type Status = AudioPlayerStatus | 'Error';
+
+interface AudioPlayerSubject {
+  status: Status;
+  message?: string;
+}
 
 export default class Bot {
   private static instance: Bot;
@@ -21,7 +30,9 @@ export default class Bot {
   private connection: VoiceConnection;
   private subscription: PlayerSubscription;
   private timeout: NodeJS.Timeout;
-  private subject: Subject<boolean> = new Subject<boolean>();
+  private audioPlayerSubject: Subject<AudioPlayerSubject> =
+    new Subject<AudioPlayerSubject>();
+  private audioDuration: number | null;
 
   private constructor() {
     this.client = new Client({
@@ -53,41 +64,45 @@ export default class Bot {
     return Bot.instance;
   }
 
-  private static logStates(oldState, newState) {
-    console.log('old state:', oldState.status);
-    console.log('new state:', newState.status);
-    console.log('=========');
+  private wait(duration: number): Promise<void> {
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, duration);
+    });
   }
 
-  private setupAudioPlayer() {
-    this.audioPlayer.on(AudioPlayerStatus.Idle, (oldState, newState) => {
-      console.log('AUDIO PLAYER', 'Idle');
-      Bot.logStates(oldState, newState);
+  private updateAudioPlayerSubject = (status: Status, message?: string) => {
+    this.audioPlayerSubject.next({ status, message });
+  };
 
-      if (this.subscription && this.connection) {
+  private setupAudioPlayer() {
+    this.audioPlayerSubject.subscribe((subject) => {
+      if (subject.status === AudioPlayerStatus.Playing)
         clearTimeout(this.timeout);
+    });
+
+    this.audioPlayer.on(AudioPlayerStatus.Idle, () => {
+      if (this.subscription && this.connection) {
         this.timeout = setTimeout(() => {
           this.subscription.unsubscribe();
           this.connection.destroy();
-        }, 5000);
+        }, this.audioDuration + 5000);
       }
 
-      this.subject.next(true);
+      this.updateAudioPlayerSubject(AudioPlayerStatus.Idle);
     });
 
-    this.audioPlayer.on(AudioPlayerStatus.Buffering, (oldState, newState) => {
-      console.log('AUDIO PLAYER', 'Buffering');
-      Bot.logStates(oldState, newState);
+    this.audioPlayer.on(AudioPlayerStatus.Buffering, () => {
+      this.updateAudioPlayerSubject(AudioPlayerStatus.Buffering);
     });
 
-    this.audioPlayer.on(AudioPlayerStatus.Playing, (oldState, newState) => {
-      console.log('AUDIO PLAYER', 'Playing');
-      Bot.logStates(oldState, newState);
+    this.audioPlayer.on(AudioPlayerStatus.Playing, () => {
+      this.updateAudioPlayerSubject(AudioPlayerStatus.Playing);
     });
 
-    this.audioPlayer.on(AudioPlayerStatus.Paused, (oldState, newState) => {
-      console.log('AUDIO PLAYER', 'Paused');
-      Bot.logStates(oldState, newState);
+    this.audioPlayer.on(AudioPlayerStatus.Paused, () => {
+      this.updateAudioPlayerSubject(AudioPlayerStatus.Paused);
     });
 
     this.audioPlayer.on('error', (error) => {
@@ -97,23 +112,36 @@ export default class Bot {
         'with track',
         error.resource.metadata,
       );
-      this.subject.next(false);
+      this.updateAudioPlayerSubject('Error', error.message);
     });
   }
 
   public playSound(soundId: string): Promise<void> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       const channelId = '571296217812697088'; // Test
       // const channelId = '691052658529796167'; // Vrais amis
+
       const channel = this.client.channels.cache.get(channelId) as GuildChannel;
 
-      this.connection = joinVoiceChannel({
-        channelId: channel.id,
-        guildId: channel.guild.id,
-        adapterCreator: channel.guild.voiceAdapterCreator,
-      });
+      if (!this.connection || this.connection.state.status === 'destroyed') {
+        console.log('connecting to voice channel...');
+        this.connection = joinVoiceChannel({
+          channelId: channel.id,
+          guildId: channel.guild.id,
+          adapterCreator: channel.guild.voiceAdapterCreator,
+        });
+
+        await this.wait(700);
+      }
 
       const audioLocation = `${process.env.UPLOADS_DIRECTORY}/audio/${soundId}`;
+
+      try {
+        this.audioDuration =
+          (await getAudioDurationInSeconds(audioLocation)) * 1000;
+      } catch {
+        reject(EDiscordErrorEnum.AUDIO_NOT_FOUND);
+      }
 
       // Will use FFmpeg with volume control enabled
       const resource = createAudioResource(audioLocation, {
@@ -127,14 +155,20 @@ export default class Bot {
       this.subscription = this.connection.subscribe(this.audioPlayer);
 
       const timeout = setTimeout(() => {
-        this.subject.next(false);
+        this.updateAudioPlayerSubject(
+          'Error',
+          EDiscordErrorEnum.AUDIO_PLAYING_TIMEOUT,
+        );
       }, 5000);
 
-      this.subject.subscribe((success: boolean) => {
-        clearTimeout(timeout);
-
-        if (success) resolve();
-        reject();
+      this.audioPlayerSubject.subscribe((subject) => {
+        if (subject.status === 'Error') {
+          reject(subject.message);
+        } else {
+          clearTimeout(timeout);
+          resolve();
+        }
+        this.audioDuration = null;
       });
     });
   }

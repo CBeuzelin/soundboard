@@ -26,7 +26,7 @@ export class SoundTileComponent {
 
   public async playSound() {
     if (this.sound?.audio) {
-      this.soundService.playSound(this.sound.audio);
+      this.soundService.playSound(this.sound._id);
     }
   }
 

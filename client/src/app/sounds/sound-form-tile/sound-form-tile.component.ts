@@ -107,7 +107,7 @@ export class SoundFormTileComponent implements OnInit {
   public playSound() {
     const sound = this.form.get(EFormAttributes.AUDIO);
     if (sound) {
-      this.soundService.playSound(sound.value);
+      this.soundService.playSound(null, sound.value);
     }
   }
 

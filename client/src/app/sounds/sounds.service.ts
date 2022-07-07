@@ -67,15 +67,19 @@ export class SoundsService {
     return this.http.delete<any>(`${this.BASE_URL}/${id}`);
   }
 
-  public playSound(sound: Blob): void {
-    const audio = document.createElement('audio');
+  public playSound(id: string | null, sound?: Blob): void {
+    if (sound) {
+      const audio = document.createElement('audio');
 
-    audio.src = window.URL.createObjectURL(sound);
+      audio.src = window.URL.createObjectURL(sound);
 
-    audio.addEventListener('loadedmetadata', () => {
-      audio.play().then(() => {
-        audio.removeEventListener('loadedmetadata', () => {});
+      audio.addEventListener('loadedmetadata', () => {
+        audio.play().then(() => {
+          audio.removeEventListener('loadedmetadata', () => {});
+        });
       });
-    });
+    } else if (id) {
+      this.http.get(`${environment.apiUrl}/discord/play/${id}`).subscribe();
+    }
   }
 }

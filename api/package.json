@@ -40,6 +40,7 @@
     "discord.js": "^13.8.1",
     "express-session": "^1.17.3",
     "ffmpeg-static": "^4.4.1",
+    "get-audio-duration": "^3.1.0",
     "mime-types": "^2.1.35",
     "mongoose": "^6.3.3",
     "passport": "^0.5.2",
