@@ -1,9 +1,10 @@
 import { IUser } from '../../../resources/interfaces/user.interface';
 
 export interface ISound {
-  _id: string;
+  id: string;
   title: string;
   tags: string[];
   createdAt: Date;
+  updatedAt: Date;
   author: IUser;
 }

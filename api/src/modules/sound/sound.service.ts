@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { SoundGetDTO } from './resources/dto/sound.dto';
 
 import { Sound, SoundDocument } from './resources/schemas/sound.schema';
 import { SoundPost, SoundPut } from './resources/classes/sound.class';
@@ -16,8 +17,14 @@ export class SoundService {
     @InjectModel(Sound.name) private soundModel: Model<SoundDocument>,
   ) {}
 
-  public getSounds(): Promise<Sound[]> {
-    return this.soundModel.find({ isArchived: false }).exec();
+  public getSounds(): Promise<SoundGetDTO[]> {
+    return this.soundModel
+      .find({ isArchived: false })
+      .populate('author')
+      .exec()
+      .then((sounds) => {
+        return sounds.map((sound) => new SoundGetDTO(sound));
+      });
   }
 
   public getSound(

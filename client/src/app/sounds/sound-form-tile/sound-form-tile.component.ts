@@ -76,7 +76,7 @@ export class SoundFormTileComponent implements OnInit {
   }
 
   public getInputId(formAttribute: EFormAttributes) {
-    return `${formAttribute}-${this.sound?._id ?? ''}`;
+    return `${formAttribute}-${this.sound?.id ?? ''}`;
   }
 
   public onFileChange(event: Event, formAttribute: EFormAttributes) {
@@ -150,7 +150,7 @@ export class SoundFormTileComponent implements OnInit {
         }
 
         this.soundService
-          .updateSound(this.sound._id, newSoundFormData)
+          .updateSound(this.sound.id, newSoundFormData)
           .subscribe(() => {
             this.onReset();
             this.soundService.getSounds();

@@ -8,11 +8,12 @@ const fileStore = FileStore.getInstance();
 const placeHolderImageUrl = 'assets/images/sound_image_placeholder.png';
 const placeHolderAudioUrl = '';
 
-export class Sound {
-  _id: string;
+export class Sound implements ISound {
+  id: string;
   title: string;
   tags: string[];
   createdAt: Date;
+  updatedAt: Date;
   author: IUser;
 
   image: Blob | undefined;
@@ -22,16 +23,17 @@ export class Sound {
   audioUrl = placeHolderAudioUrl;
 
   constructor(sound: ISound) {
-    this._id = sound._id;
+    this.id = sound.id;
     this.title = sound.title;
     this.tags = sound.tags;
     this.createdAt = sound.createdAt;
+    this.updatedAt = sound.updatedAt;
     this.author = sound.author;
   }
 
   public async setImage() {
-    const image = fileStore.getImageFromStore(this._id);
-    const imageUrl = `${environment.apiBaseUrl}/image/${this._id}`;
+    const image = fileStore.getImageFromStore(this.id);
+    const imageUrl = `${environment.apiBaseUrl}/image/${this.id}`;
 
     if (image) {
       this.imageUrl = imageUrl;
@@ -41,7 +43,7 @@ export class Sound {
         .then((blob) => {
           this.imageUrl = imageUrl;
           this.image = blob;
-          fileStore.setImageInStore(this._id, blob);
+          fileStore.setImageInStore(this.id, blob);
         })
         .catch(() => {
           this.imageUrl = placeHolderImageUrl;
@@ -50,8 +52,8 @@ export class Sound {
   }
 
   public async setAudio() {
-    const audio = fileStore.getAudioFromStore(this._id);
-    const audioUrl = `${environment.apiBaseUrl}/audio/${this._id}`;
+    const audio = fileStore.getAudioFromStore(this.id);
+    const audioUrl = `${environment.apiBaseUrl}/audio/${this.id}`;
 
     if (audio) {
       this.audioUrl = audioUrl;
@@ -61,7 +63,7 @@ export class Sound {
         .then((blob) => {
           this.audioUrl = audioUrl;
           this.audio = blob;
-          fileStore.setAudioInStore(this._id, blob);
+          fileStore.setAudioInStore(this.id, blob);
         })
         .catch(() => {
           this.audioUrl = placeHolderAudioUrl;

@@ -19,14 +19,14 @@ export class SoundTileComponent {
   public deleteSound() {
     if (this.sound) {
       this.soundService
-        .deleteSound(this.sound._id)
+        .deleteSound(this.sound.id)
         .subscribe(() => this.soundService.getSounds());
     }
   }
 
   public async playSound() {
     if (this.sound?.audio) {
-      this.soundService.playSound(this.sound._id);
+      this.soundService.playSound(this.sound.id);
     }
   }
 

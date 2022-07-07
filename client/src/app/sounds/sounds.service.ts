@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable, Subject, Subscription } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { ISound } from './resources/interfaces/sound.interface';
-import { Observable, Subject, Subscription } from 'rxjs';
 import { Sound } from './resources/classses/sound.class';
 import FileStore from './resources/classses/file-store.class';
 

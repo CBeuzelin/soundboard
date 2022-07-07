@@ -2,6 +2,27 @@
   <img class="sound-image" src="{{ sound.imageUrl }}" alt="image of sound" />
 
   <div class="sound-tile-content">
+    <div class="info">
+      <div class="info-content">
+        <mat-icon>info</mat-icon>
+        <ul class="info-popup">
+          <li>
+            <span class="title">Author:</span>
+            {{ sound.author.name }}
+            <span class="discriminator">#{{ sound.author.discriminator }}</span>
+          </li>
+          <li>
+            <span class="title">Created at:</span>
+            {{ sound.updatedAt }}
+          </li>
+          <li *ngIf="sound.updatedAt">
+            <span class="title">Last updated at:</span>
+            {{ sound.updatedAt }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
     <div class="sound-tile-body">
       {{ sound.title }}
     </div>
