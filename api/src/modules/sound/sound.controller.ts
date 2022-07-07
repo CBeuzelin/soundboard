@@ -25,6 +25,9 @@ import { ISoundFiles } from './resources/interfaces/sound.interface';
 import { SoundService } from './sound.service';
 import { FileUtils } from '../../utils/file-utils';
 import { ESoundErrorEnum } from './resources/enums/error.enum';
+import Bot from '../discord/bot';
+
+const BOT = Bot.getInstance();
 
 @Controller(ESoundRoute.ROOT)
 export class SoundController {
@@ -127,5 +130,12 @@ export class SoundController {
   @UseGuards(AuthenticatedGuard)
   async archiveSound(@Req() req: Request) {
     return await this.soundService.archiveSound(req.params.id);
+  }
+
+  @Get(`:id/${ESoundRoute.PLAY}`)
+  async playSound(@Req() req: Request, @Res() res: Response) {
+    return BOT.playSound(req.params.id)
+      .then(() => res.sendStatus(EHttpCode.OK))
+      .catch(() => res.sendStatus(EHttpCode.INTERNAL_SERVER_ERROR));
   }
 }

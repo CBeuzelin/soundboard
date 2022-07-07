@@ -8,14 +8,9 @@ import {
   PlayerSubscription,
   VoiceConnection,
 } from '@discordjs/voice';
+import { Subject } from 'rxjs';
 
 import Commands from './commands';
-
-// 62c1a94c2e85bbe0a881e525 - okay
-// 62c1d60ee49e58c59796a828 - combien
-// 62c1d623e49e58c59796a82f - david goodenough
-// 62c1d782e49e58c59796a843 - oh vos gueules
-// 62c1d838e49e58c59796a84e - cependant
 
 export default class Bot {
   private static instance: Bot;
@@ -25,6 +20,8 @@ export default class Bot {
   private readonly audioPlayer: AudioPlayer = createAudioPlayer();
   private connection: VoiceConnection;
   private subscription: PlayerSubscription;
+  private timeout: NodeJS.Timeout;
+  private subject: Subject<boolean> = new Subject<boolean>();
 
   private constructor() {
     this.client = new Client({
@@ -67,12 +64,15 @@ export default class Bot {
       console.log('AUDIO PLAYER', 'Idle');
       Bot.logStates(oldState, newState);
 
-      if (this.subscription) {
-        setTimeout(() => {
+      if (this.subscription && this.connection) {
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
           this.subscription.unsubscribe();
           this.connection.destroy();
         }, 5000);
       }
+
+      this.subject.next(true);
     });
 
     this.audioPlayer.on(AudioPlayerStatus.Buffering, (oldState, newState) => {
@@ -97,29 +97,45 @@ export default class Bot {
         'with track',
         error.resource.metadata,
       );
+      this.subject.next(false);
     });
   }
 
-  public playSound(soundId: string): void {
-    const channel = this.client.channels.cache.get(
-      '691052658529796167',
-    ) as GuildChannel;
+  public playSound(soundId: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const channelId = '571296217812697088'; // Test
+      // const channelId = '691052658529796167'; // Vrais amis
+      const channel = this.client.channels.cache.get(channelId) as GuildChannel;
 
-    this.connection = joinVoiceChannel({
-      channelId: channel.id,
-      guildId: channel.guild.id,
-      adapterCreator: channel.guild.voiceAdapterCreator,
+      this.connection = joinVoiceChannel({
+        channelId: channel.id,
+        guildId: channel.guild.id,
+        adapterCreator: channel.guild.voiceAdapterCreator,
+      });
+
+      const audioLocation = `${process.env.UPLOADS_DIRECTORY}/audio/${soundId}`;
+
+      // Will use FFmpeg with volume control enabled
+      const resource = createAudioResource(audioLocation, {
+        inlineVolume: true,
+      });
+      resource.volume.setVolume(0.5);
+      // https://discordjs.guide/voice/audio-resources.html#creation
+
+      this.audioPlayer.play(resource);
+
+      this.subscription = this.connection.subscribe(this.audioPlayer);
+
+      const timeout = setTimeout(() => {
+        this.subject.next(false);
+      }, 5000);
+
+      this.subject.subscribe((success: boolean) => {
+        clearTimeout(timeout);
+
+        if (success) resolve();
+        reject();
+      });
     });
-
-    const audioLocation = `${process.env.UPLOADS_DIRECTORY}/audio/${soundId}`;
-
-    // Will use FFmpeg with volume control enabled
-    const resource = createAudioResource(audioLocation, { inlineVolume: true });
-    resource.volume.setVolume(0.5);
-    // https://discordjs.guide/voice/audio-resources.html#creation
-
-    this.audioPlayer.play(resource);
-
-    this.subscription = this.connection.subscribe(this.audioPlayer);
   }
 }
